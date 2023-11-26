@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
+		<title>管理公益项目-爱慈善</title>
+
+		<link rel="stylesheet" href="background/modules/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="background/modules/ionicons/css/ionicons.min.css">
+		<link rel="stylesheet" href="background/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
+
+		<link rel="stylesheet" href="background/modules/summernote/summernote-lite.css">
+		<link rel="stylesheet" href="background/modules/flag-icon-css/css/flag-icon.min.css">
+		<link rel="stylesheet" href="background/css/demo.css">
+		<link rel="stylesheet" href="background/css/style.css">
+		<link rel="stylesheet" href="background/css/common.css"/>
+		<link rel="stylesheet" href="common/datatable/dataTables.bootstrap4.min.css"/>
+	</head>
+
+	<body>
+	<div id="app">
+		<div class="main-wrapper">
+			<div class="navbar-bg"></div>
+
+				<div th:replace="commons/admin-bar::navbar(currUri='my-project')"></div>
+				<div th:replace="commons/admin-bar::sidebar(currUri='my-project')"></div>
+				<div class="main-content">
+					<section class="section">
+						<h1 class="section-header">
+							<div>
+								<i class="ion ion-heart"></i>
+								管理公益项目
+							</div>
+							<div class="float-right">
+								<a href="new-project" class="btn btn-primary btn-sm" > 新的公益项目</a>
+							</div>
+						</h1>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<div class="card mb-3">
+									<div class="card-body">
+										<div class="table-responsive">
+											<!--已发布-->
+											<table id="example1" class="table table-bordered table-hover display" style="text-align: center">
+												<thead>
+												<tr>
+													<th style="width: 20%">名称</th>
+													<th style="width: 15%">主题</th>
+													<th style="width: 10%">赞助</th>
+													<th style="width: 10%">评论数</th>
+													<th style="width: 20%">发布时间</th>
+													<th style="width: 15%">操作</th>
+												</tr>
+												</thead>
+												<tbody style="font-size: 13px">
+												<tr th:each="projectVo:${projectVos}">
+													<td>
+														<a th:href="@{project(id=${projectVo.project.id})}" th:text="${projectVo.project.name}"></a>
+													</td>
+													<td th:text="${projectVo.project.theme}"></td>
+													<td th:text="${projectVo.project.sponsor}"></td>
+													<td th:text="${projectVo.comments}"></td>
+													<td th:text="${#dates.format(projectVo.project.gmtModified,'yyyy年MM月dd日 HH:mm:ss')}"></td>
+													<td>
+														<a href="#" title="查看" class="btn btn-sm btn-warning"><i class="ion ion-flag"></i></a>
+														<a th:href="@{edit-project(id=${projectVo.project.id})}" title="编辑" class="btn btn-sm btn-success"><i class="ion ion-edit"></i></a>
+														<button th:onclick="deleteProject([[${projectVo.project.id}]])" title="删除此公益项目" class="btn btn-sm btn-danger"> <i class="ion ion-trash-b"></i></button>
+													</td>
+												</tr>
+												</tbody>
+												<thead>
+												</thead>
+											</table>
+										</div>
+
+									</div>
+								</div><!-- end card-->
+							</div>
+						</div>
+
+					</section>
+				</div>
+				<div th:replace="commons/admin-bar::footer"></div>
+			</div>
+		</div>
+		<script src="background/modules/jquery.min.js"></script>
+		<script src="background/modules/popper.js"></script>
+		<script src="background/modules/tooltip.js"></script>
+		<script src="background/modules/bootstrap/js/bootstrap.min.js"></script>
+		<script src="background/modules/nicescroll/jquery.nicescroll.min.js"></script>
+		<script src="background/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
+		<script src="background/js/sa-functions.js"></script>
+
+		<script src="background/modules/chart.min.js"></script>
+		<script src="background/modules/summernote/summernote-lite.js"></script>
+		
+		<script src="background/js/scripts.js"></script>
+		<script src="background/js/custom.js"></script>
+		<script src="common/datatable/jquery.dataTables.min.js"></script>
+		<script src="common/datatable/dataTables.bootstrap4.min.js"></script>
+		<script src="common/js/board.js"></script>
+		<script>
+		// START CODE FOR BASIC DATA TABLE
+		$(document).ready(function() {
+			$('#example1').DataTable({
+				language: {
+					"sProcessing": "处理中...",
+					"sLengthMenu": "显示 _MENU_ 项结果",
+					"sZeroRecords": "没有匹配结果",
+					"sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+					"sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+					"sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+					"sInfoPostFix": "",
+					"sSearch": "搜索:",
+					"sUrl": "",
+					"sEmptyTable": "表中数据为空",
+					"sLoadingRecords": "载入中...",
+					"sInfoThousands": ",",
+					"oPaginate": {
+						"sFirst": "首页",
+						"sPrevious": "上页",
+						"sNext": "下页",
+						"sLast": "末页"
+					},
+					"oAria": {
+						"sSortAscending": ": 以升序排列此列",
+						"sSortDescending": ": 以降序排列此列"
+					}
+				},
+				"aoColumnDefs": [ { "bSortable": false, "aTargets": [ 5 ]}],
+				"order": [4, "desc"]
+			});
+		});
+		// END CODE FOR BASIC DATA TABLE
+
+
+		// START CODE FOR Child rows (show extra / detailed information) DATA TABLE
+
+
+	</script>
+	<script src="common/js/project.js"></script>
+	</body>
+</html>

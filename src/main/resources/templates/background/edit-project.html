@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
+          name="viewport">
+    <title>编辑公益项目-爱慈善</title>
+    <!-- Favicon and Touch Icons -->
+    <link href="common/favicon.png" rel="shortcut icon" type="image/png">
+    <link rel="stylesheet" href="background/modules/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="background/modules/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="background/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
+
+    <link rel="stylesheet" href="background/modules/summernote/summernote-lite.css">
+    <link rel="stylesheet" href="background/modules/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="background/css/demo.css">
+    <link rel="stylesheet" href="background/css/style.css">
+    <!--引入Jquery-->
+    <script src="common/js/jquery-3.4.1.js"></script>
+    <!--引入MarkDown-->
+    <link rel="stylesheet" type="text/css" href="common/EditorMD/lib/codemirror/codemirror.min.css"/>
+    <link rel="stylesheet" type="text/css" href="common/EditorMD/css/editormd.css"/>
+
+</head>
+
+<body>
+<div id="app">
+    <div class="main-wrapper">
+        <div class="navbar-bg"></div>
+        <div th:replace="commons/admin-bar::navbar(currUri='new-project')"></div>
+        <div th:replace="commons/admin-bar::sidebar(currUri='new-project')"></div>
+
+        <div class="main-content">
+            <section class="section">
+                <h1 class="section-header">
+                    <div><i class="ion ion-heart"></i> 编辑公益项目</div>
+                </h1>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-12" style="height: 800px">
+                        <input id="title" th:value="${project.name}" type="text" style="margin-bottom: 10px" class="form-control"
+                               autocomplete="off" placeholder="填写公益项目标题">
+                        <div id="editormd">
+                            <textarea id="content" name="content" style="display:none;">[[${project.content}]]</textarea>
+                        </div>
+                        <input type="hidden" id="imgPath" th:value="${project.img}">
+                        <input type="hidden" id="id" th:value="${project.id}">
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 80px">
+                    <div class="col-lg-12 col-md-12 col-12">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                项目背景
+                            </div>
+                            <div class="card-body">
+                                <textarea id="background" type="text" style="margin-bottom: 10px" class="form-control"
+                                          autocomplete="off" placeholder="填写公益项目的背景...">[[${project.background}]]</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-12">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                其他信息
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-4">
+                                        <input th:value="${project.theme}" id="theme" type="text" style="margin-bottom: 10px" class="form-control"
+                                               autocomplete="off" placeholder="填写公益项目的主题...">
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-4">
+                                        <input th:value="${project.target}" id="target" type="text" style="margin-bottom: 10px" class="form-control"
+                                               autocomplete="off" placeholder="填写公益项目的目的...">
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-4">
+                                        <input th:value="${project.sponsor}" id="sponsor" type="text" style="margin-bottom: 10px" class="form-control"
+                                               autocomplete="off" placeholder="填写公益项目的赞助商...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-12">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-6">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-6 col-6">
+                                                    <img id="cover_img" class="img-thumbnail"
+                                                         style="width:300px; height:160px;"
+                                                         th:src="${project.img}">
+                                                </div>
+                                                <div class="col-lg-6 col-md-6 col-6">
+                                                    <div class="card-header">
+                                                        上传公益项目封面
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <input type="file" class="form-control" id="cover"
+                                                               onchange="uploadCover()">
+                                                    </div>
+                                                    <div class="card-footer">
+                                                        <small class="text-danger">若未上传封面，系统将随机设置封面！</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer">
+                                            <button class="btn btn-success" onclick="updateProject()">发布公益项目</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div th:replace="commons/admin-bar::footer"></div>
+    </div>
+</div>
+
+<script src="background/modules/jquery.min.js"></script>
+<script src="background/modules/popper.js"></script>
+<script src="background/modules/tooltip.js"></script>
+<script src="background/modules/bootstrap/js/bootstrap.min.js"></script>
+<script src="background/modules/nicescroll/jquery.nicescroll.min.js"></script>
+<script src="background/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
+<script src="background/js/sa-functions.js"></script>
+
+<script src="background/modules/chart.min.js"></script>
+<script src="background/modules/summernote/summernote-lite.js"></script>
+
+<script src="background/js/scripts.js"></script>
+<script src="background/js/custom.js"></script>
+
+<!--引入MarkDown-->
+<script type="text/javascript" src="common/EditorMD/editormd.amd.min.js"></script>
+<script src="background/js/bootstrap-datetimepicker.min.js"></script>
+<script src="background/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script type="text/javascript">
+	$(function () {
+		var picker1 = $('#datetimepicker1').datetimepicker({
+			format: 'YYYY-MM-DD',
+			locale: moment.locale('zh-cn'),
+			//minDate: '2016-7-1'
+		});
+		var picker2 = $('#datetimepicker2').datetimepicker({
+			format: 'YYYY-MM-DD',
+			locale: moment.locale('zh-cn')
+		});
+		//动态设置最小值
+		picker1.on('dp.change', function (e) {
+			picker2.data('DateTimePicker').minDate(e.date);
+		});
+		//动态设置最大值
+		picker2.on('dp.change', function (e) {
+			picker1.data('DateTimePicker').maxDate(e.date);
+		});
+	});
+
+    var editor;
+    $(function () {
+        editor = editormd("editormd", {
+            placeholder: "此处开始编写文章的内容...",
+            path: 'common/EditorMD/lib/',
+            saveHTMLToTextarea: true,//注意3：这个配置，方便post提交表单
+            /**上传图片相关配置如下*/
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "image/article",//注意你后端的上传图片服务地址
+            toolbarIcons: function () {
+                // Or return editormd.toolbarModes[name]; // full, simple, mini
+                return ["undo", "redo", "|", "bold", "italic", "quote", "uppercase", "lowercase", "|", "h1", "h2", "h3", "h4", "|", "list-ul", "list-ol", "hr", "|", "link", "image", "code", "code-block", "table", "html-entities", "|", "watch", "preview", "clear", "|", "help"]
+            },
+            taskList: true,
+            tocm: true,         // Using [TOCM]
+            tex: true,                   // 开启科学公式TeX语言支持，默认关闭
+            flowChart: true,             // 开启流程图支持，默认关闭
+            sequenceDiagram: true,
+            codeFold: true,
+            watch: true
+        });
+        //监听粘贴服务
+        document.addEventListener('paste', function (event) {
+            var items = (event.clipboardData || window.clipboardData).items;
+            var file = null;
+            if (items && items.length) {
+                // 搜索剪切板items
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        file = items[i].getAsFile();
+                        break;
+                    }
+                }
+            } else {
+                alert("当前浏览器不支持");
+                return;
+            }
+            if (!file) {
+                return;
+            }
+            // 此时file就是我们的剪切板中的图片对象
+            // 这里是上传
+            var xhr = new XMLHttpRequest();
+            // 上传结束
+            xhr.onload = function () {
+
+            };
+            xhr.onerror = function () {
+                alert("网络异常，上传失败!");
+            };
+            var formData = new FormData();
+            formData.append("editormd-image-file", file);
+            xhr.open('POST', 'image/article', true);
+            xhr.send(formData);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+                        //5.处理返回的结果
+                        var obj = xhr.responseText;
+                        var objarr = eval("(" + obj + ")");
+                        if (objarr["success"] == 1) {
+                            editor.insertValue("![](" + objarr["url"] + ")");
+                        } else {
+                            alert("粘贴图片失败!");
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+<script src="common/js/project.js"></script>
+<script src="common/js/article.js"></script>
+</body>
+</html>

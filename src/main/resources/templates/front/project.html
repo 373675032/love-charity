@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Meta Tags -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <meta name="description" content="Oellfare - Charity Template">
+        <meta name="author" content="">
+
+        <!-- Page Title -->
+        <title>爱慈善公益-阅读公益项目</title>
+
+        <!-- Favicon and Touch Icons -->
+        <link href="front/images/logo.jpg" rel="shortcut icon" type="image/png">
+
+        <!-- Lead Style -->
+        <link href="front/css/style.css" rel="stylesheet" type="text/css">
+
+        <!--引入Jquery-->
+        <script src="common/js/jquery-3.4.1.js"></script>
+        <!--引入MarkDown-->
+        <link rel="stylesheet" type="text/css" href="common/EditorMD/css/editormd.preview.css" />
+        <link rel="stylesheet" type="text/css" href="common/css/xtiper.css" />
+        <script type="text/javascript" src="common/EditorMD/lib/marked.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/prettify.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/raphael.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/underscore.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/sequence-diagram.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/flowchart.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/jquery.flowchart.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/editormd.amd.min.js"></script>
+        <script type="text/javascript" src="common/js/xtiper.min.js"></script>
+        <script type="text/javascript" src="common/js/comment.js"></script>
+        <style>
+            .power_blog_details .power_blog_full_content img{
+                margin: 0px;
+            }
+            .power_blog_details .power_blog_full_content p{
+                margin: 10px;
+            }
+        </style>
+    </head>
+    <!--PreLoader-->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="siteloading-preloader"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+    <body>
+        <div th:replace="commons/front-bar::#header(currUri='projects',links=${links})"></div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-header-content">
+                <div class="container">
+                    <h2 class="heading" th:text="${project.name}"></h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-wrapper">
+
+            <div class="section">
+                <div class="container">
+                    <div class="power_event_details_top">
+                        <div class="power_event_details_inner">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6">
+                                    <img style="width: 100%;height: 400px" th:src="${project.img}" alt="">
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="power_event_details_left">
+                                        <div class="list_content">
+                                            <ul class="icon">
+                                                <li><span>项目名称：</span>[[${project.name}]]</li>
+                                                <li><span>发布时间：</span> [[${#dates.format(project.gmtCreate,'yyyy年MM月dd日 HH:mm:ss')}]]</li>
+                                                <li><span>主题：</span> [[${project.theme}]]</li>
+                                                <li><span>赞助：</span> [[${project.sponsor}]]</li>
+                                                <li><span>背景：</span> [[${project.background}]]</li>
+                                                <li><span>目的：</span> [[${project.target}]]</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 main-content">
+                                    <div class="power_blog_details">
+                                        <div class="power_blog_wrapper">
+                                            <div class="post_header" style="margin-top: 20px">
+                                                <h2 class="post_title">具体内容</h2>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-9 col-md-9">
+                                                    <div class="power_blog_full_content">
+                                                        <div id="doc-content" class="post-content" style="padding: 5px 0px 20px 0px">
+                                                            <textarea style="display:none;">[[${project.content}]]</textarea>
+                                                        </div>
+                                                        <script type="text/javascript">
+                                                            var testEditor;
+                                                            $(function () {
+                                                                testEditor = editormd.markdownToHTML("doc-content", {//注意：这里是上面DIV的id
+                                                                    htmlDecode      : "style,script,iframe",  // you can filter tags decode
+                                                                    taskList        : true,
+                                                                    tex             : true,  // 默认不解析
+                                                                    flowChart       : true,  // 默认不解析
+                                                                    sequenceDiagram : true,  // 默认不解析
+                                                                });
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3">
+                                                    <h4>更多公益项目</h4>
+                                                    <br>
+                                                    <div class="power_events_list fifth" th:each="temp:${projects}">
+                                                        <div class="power_events_list_wrapper">
+                                                            <div class="power_events_list_image">
+                                                                <img class="primary_img" style="width: 146px;height: 100px" th:src="${temp.img}" alt="">
+                                                            </div>
+                                                            <div class="power_events_list_content">
+                                                                <h6><a th:href="@{project(id=${temp.id})}">[[${temp.theme}]]</a></h6>
+                                                                <div class="power_events_list_date">[[${#dates.format(temp.gmtCreate,'yyyy年MM月dd日 HH:mm:ss')}]]</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="comment_sec">
+                                        <div class="comment_form" style="margin-top: 20px">
+                                            <div class="comment_form_heading_wrapper" style="margin-bottom: 10px">
+                                                <h1 class="comment_title">发表评论</h1>
+                                                <h6 class="comment_sub_title">随时分享你的想法，我们会积极采纳意见！ </h6>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group" style="margin-bottom: 0px">
+                                                        <textarea id="content" name="message" class="form-control" th:if="${session.loginUser != null}" placeholder="此处填写评论内容..."></textarea>
+                                                        <textarea id="content" name="message" class="form-control" th:if="${session.loginUser == null}" disabled placeholder="登录后可发表评论..."></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="power_button_group">
+                                                        <input class="power_button effect_1" th:if="${session.loginUser != null}" th:onclick="addComment([[${project.id}]],[[${type}]])" type="submit" value="发表" name="submit">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <ul class="comment_area" style="margin-top: 20px;" >
+
+                                            <li class="blog-comment-user" th:if="${first!=null}">
+                                                <div class="commenter-div">
+                                                    <div class="commenter">
+                                                        <img alt="John Doe" th:src="${first.img}" class="avatar">
+                                                    </div>
+                                                    <div class="comment-block">
+                                                        <h4>[[${first.userName}]]<span class="reply"> <span style="font-weight: bold;color: blue;margin-right: 10px">置顶</span> <a th:onclick="replyComment([[${first.userName}]],[[${first.id}]],[[${first.content}]],[[${type}]])" href="#" class="comment-reply-link">回复</a></span></h4>
+                                                        <h6 th:text="${#dates.format(first.gmtCreate,'yyyy年MM月dd日 HH:mm:ss')}"></h6>
+                                                        <p th:text="${first.content}"></p>
+                                                    </div>
+                                                </div>
+
+                                                <ul class="children" th:if="${first.replyComments != null}">
+                                                    <li class="blog-comment-user" th:each="children:${first.replyComments}">
+                                                        <div class="commenter-div">
+                                                            <div class="commenter">
+                                                                <img alt="admin" th:src="${children.img}" class="avatar">
+                                                            </div>
+                                                            <div class="comment-block">
+                                                                <h4 th:text="${children.userName}"></h4>
+                                                                <h6 th:text="${#dates.format(children.gmtCreate,'yyyy年MM月dd日 HH:mm:ss')}"></h6>
+                                                                <p th:text="${children.content}"></p>
+                                                            </div>
+                                                        </div>
+                                                    </li><!-- #comment-## -->
+                                                </ul><!-- .children -->
+                                            </li><!-- #comment-## -->
+
+                                            <li class="blog-comment-user" th:each="comment:${comments}">
+                                                <div class="commenter-div">
+                                                    <div class="commenter">
+                                                        <img alt="John Doe" th:src="${comment.img}" class="avatar">
+                                                    </div>
+                                                    <div class="comment-block">
+                                                        <h4>[[${comment.userName}]]<span class="reply"><a th:onclick="replyComment([[${comment.userName}]],[[${comment.id}]],[[${comment.content}]],[[${type}]])" href="#" class="comment-reply-link">回复</a></span></h4>
+                                                        <h6 th:text="${#dates.format(comment.gmtCreate,'yyyy年MM月dd日 HH:mm:ss')}"></h6>
+                                                        <p th:text="${comment.content}"></p>
+                                                    </div>
+                                                </div>
+
+                                                <ul class="children" th:if="${comment.replyComments != null}">
+                                                    <li class="blog-comment-user" th:each="children:${comment.replyComments}">
+                                                        <div class="commenter-div">
+                                                            <div class="commenter">
+                                                                <img alt="admin" th:src="${children.img}" class="avatar">
+                                                            </div>
+                                                            <div class="comment-block">
+                                                                <h4 th:text="${children.userName}"></h4>
+                                                                <h6 th:text="${#dates.format(children.gmtCreate,'yyyy年MM月dd日 HH:mm:ss')}"></h6>
+                                                                <p th:text="${children.content}"></p>
+                                                            </div>
+                                                        </div>
+                                                    </li><!-- #comment-## -->
+                                                </ul><!-- .children -->
+                                            </li><!-- #comment-## -->
+                                        </ul>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="commons/front-bar::#footer"></div>
+
+         <!-- All JavaScript Files
+        ================================================== -->
+
+        <script src="common/js/jquery.min.js"></script>
+        <script src="front/js/bootstrap.min.js"></script>
+        <script src="front/js/menu.js"></script>
+        <script src="front/js/select2.js"></script>
+        <script src="front/js/jquery.fancybox.min.js"></script>
+        <script src="front/js/owl.carousel.min.js"></script>
+        <script src="front/js/spectragram.min.js"></script>
+        <script src="front/js/wow.js"></script>
+        <script src="front/js/custom.js"></script>
+        
+    </body>
+</html>

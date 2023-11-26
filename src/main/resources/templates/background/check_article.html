@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
+          name="viewport">
+    <title>文章审核管理-爱慈善</title>
+
+    <link rel="stylesheet" href="background/modules/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="background/modules/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="background/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
+
+    <link rel="stylesheet" href="background/modules/summernote/summernote-lite.css">
+    <link rel="stylesheet" href="background/modules/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="background/css/demo.css">
+    <link rel="stylesheet" href="background/css/style.css">
+    <link rel="stylesheet" href="background/css/common.css"/>
+    <link rel="stylesheet" href="common/datatable/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="background/css/xtiper.css"/>
+</head>
+
+<body>
+<div id="app">
+    <div class="main-wrapper">
+        <div class="navbar-bg"></div>
+
+        <div th:replace="commons/admin-bar::navbar(currUri='tarsh-article')"></div>
+        <div th:replace="commons/admin-bar::sidebar(currUri='check-article',checked=${checked})"></div>
+        <div class="main-content">
+            <section class="section">
+                <h1 class="section-header">
+                    <div>
+                        <span th:if="${checked == 0}"><i class="ion ion-information-circled"></i> 待审核 - 求助文章 </span>
+                        <span th:if="${checked == 1}"><i class="ion ion-checkmark-circled"></i> 已通过 - 求助文章 </span>
+                        <span th:if="${checked == 2}"><i class="ion ion-close-circled"></i> 未通过 - 求助文章 </span>
+                    </div>
+                    <div class="float-right">
+                        <a href="admin-article?checked=0" th:if="${checked != 0}" class="btn btn-sm btn-warning">待审核</a>
+                        <a href="admin-article?checked=1" th:if="${checked != 1}" class="btn btn-sm btn-success">已通过</a>
+                        <a href="admin-article?checked=2" th:if="${checked != 2}" class="btn btn-sm btn-danger">未通过</a>
+                    </div>
+                </h1>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <!--待审核-->
+                                    <table id="example1" th:if="${checked == 0}" class="table table-bordered table-hover display"
+                                           style="text-align: center">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 10%">作者</th>
+                                            <th style="width: 20%">标题</th>
+                                            <th style="width: 20%">活动</th>
+                                            <th style="width: 20%">发布时间</th>
+                                            <th style="width: 15%">审核状态</th>
+                                            <th style="width: 15%">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody style="font-size: 13px">
+                                        <tr th:each="article,articleStat:${allArticles}">
+                                            <td th:text="${article.userName}"></td>
+                                            <td style="font-weight: bold;color: #0c5460">
+                                               《 [[${article.article.title}]] 》
+                                            </td>
+                                            <td th:text="${article.activity}" style="color: red"></td>
+                                            <td th:text="${#dates.format(article.article.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <td class="text-warning">等待审核</td>
+                                            <td>
+                                                <a th:href="@{preview(id=${article.article.id})}" title="查看" target="_blank" class="btn btn-sm btn-primary">
+                                                   <i class="ion-eye ion"></i>
+                                                </a>
+                                                <button th:onclick="check([[${article.article.id}]])" title="处理" class="btn btn-sm btn-danger">
+                                                    <i class="ion ion-arrow-right-a"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <thead>
+                                        </thead>
+                                    </table>
+                                    <!--已通过-->
+                                    <table id="example2" th:if="${checked == 1}" class="table table-bordered table-hover display"
+                                           style="text-align: center">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 10%">作者</th>
+                                            <th style="width: 20%">标题</th>
+                                            <th style="width: 20%">活动</th>
+                                            <th style="width: 20%">发布时间</th>
+                                            <th style="width: 20%">审核时间</th>
+                                            <th style="width: 10%">审核状态</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody style="font-size: 13px">
+                                        <tr th:each="article,articleStat:${allArticles}">
+                                            <td th:text="${article.userName}"></td>
+                                            <td>
+                                                <a style="font-weight: bold;color: #0c5460" th:href="@{/article(id=${article.article.id})}">
+                                                    《 [[${article.article.title}]] 》
+                                                </a>
+                                            </td>
+                                            <td th:text="${article.activity}" style="color: red"></td>
+                                            <td th:text="${#dates.format(article.article.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <td th:text="${#dates.format(article.article.gmtModified,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <td class="text-success">已通过</td>
+                                        </tr>
+                                        </tbody>
+                                        <thead>
+                                        </thead>
+                                    </table>
+                                    <!--未通过-->
+                                    <table id="example3" th:if="${checked == 2}" class="table table-bordered table-hover display"
+                                           style="text-align: center">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 10%">作者</th>
+                                            <th style="width: 20%">标题</th>
+                                            <th style="width: 20%">活动</th>
+                                            <th style="width: 20%">审核时间</th>
+                                            <th style="width: 20%">处理信息</th>
+                                            <th style="width: 10%">审核状态</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody style="font-size: 13px">
+                                        <tr th:each="article,articleStat:${allArticles}">
+                                            <td th:text="${article.userName}"></td>
+                                            <td style="font-weight: bold;color: #0c5460">
+                                                《 [[${article.article.title}]] 》
+                                            </td>
+                                            <td th:text="${article.activity}" style="color: red"></td>
+                                            <td th:text="${#dates.format(article.article.gmtModified,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <td th:text="${article.article.info}"></td>
+                                            <td class="text-danger">未通过</td>
+                                        </tr>
+                                        </tbody>
+                                        <thead>
+                                        </thead>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div><!-- end card-->
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div th:replace="commons/admin-bar::footer"></div>
+    </div>
+
+</div>
+<script src="background/modules/jquery.min.js"></script>
+<script src="background/modules/popper.js"></script>
+<script src="background/modules/tooltip.js"></script>
+<script src="background/modules/bootstrap/js/bootstrap.min.js"></script>
+<script src="background/modules/nicescroll/jquery.nicescroll.min.js"></script>
+<script src="background/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
+<script src="background/js/sa-functions.js"></script>
+
+<script src="background/modules/chart.min.js"></script>
+<script src="background/modules/summernote/summernote-lite.js"></script>
+
+<script src="background/js/scripts.js"></script>
+<script src="background/js/custom.js"></script>
+<script src="common/datatable/jquery.dataTables.min.js"></script>
+<script src="common/datatable/dataTables.bootstrap4.min.js"></script>
+<script src="common/js/board.js"></script>
+<script src="background/js/xtiper.min.js"></script>
+
+<script>
+    // START CODE FOR BASIC DATA TABLE
+    $(document).ready(function () {
+        $('#example1').DataTable({
+            language: {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 项结果",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            },
+            "aoColumnDefs": [{"bSortable": false, "aTargets": [ 1,  4, 5]}],
+            "order": [3, "desc"]
+        });
+        $('#example2').DataTable({
+            language: {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 项结果",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            },
+            "aoColumnDefs": [{"bSortable": false, "aTargets": [1, 5]}],
+            "order": [4, "desc"]
+        });
+        $('#example3').DataTable({
+            language: {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 项结果",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            },
+            "aoColumnDefs": [{"bSortable": false, "aTargets": [1, 2, 3, 5]}],
+            "order": [4, "desc"]
+        });
+    });
+    // END CODE FOR BASIC DATA TABLE
+
+
+    // START CODE FOR Child rows (show extra / detailed information) DATA TABLE
+
+    /**
+     * 审核文章
+     * @param id
+     */
+    function check(id) {
+        xtip.win({
+            type: 'confirm', //alert 或 confirm
+            btn: ['确认', '关闭'],
+            tip: '<div class="form-group">\n' +
+                 '    <label>处理结果</label>\n' +
+                 '    <select class="form-control" id="result">\n' +
+                 '        <option value="1">通过</option>\n' +
+                 '        <option value="2">不通过</option>\n' +
+                 '    </select>\n' +
+                 '</div>\n' +
+                 '<div class="form-group">\n' +
+                 '    <label for="result_info">处理信息</label>\n' +
+                 '    <input id="result_info" type="text" class="form-control" >\n' +
+                 '</div>',
+            // icon: 'success',
+            title: "求助文章审核",
+            min: true,
+            width: '600px',
+            shade: false,
+            shadeClose: false,
+            lock: false,
+            btn1: function () {
+                var result = $("#result").val();
+                var result_info = $("#result_info").val();
+                $.ajax({
+                    type: "POST",
+                    url: "updateArticleIsCheck",
+                    data: {isChecked: result, info: result_info, id: id},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data['code'] == 200) {
+                            alert("审核成功！");
+                            window.location.reload();
+                        } else {
+                            alert("服务器发生了一个错误");
+                        }
+                    }
+                });
+            },
+            zindex: 99999,
+        });
+    }
+
+</script>
+</body>
+</html>

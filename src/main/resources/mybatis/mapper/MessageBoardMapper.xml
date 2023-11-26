@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.charity.mapper.MessageBoardMapper">
+    <!--开启二级缓存,使用Ehcache缓存框架-->
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <!--message_board的映射结果集-->
+    <resultMap type="com.charity.entity.MessageBoard" id="MessageBoardMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <!--全部字段-->
+    <sql id="allColumn"> id, name, email, content, gmt_create, gmt_modified </sql>
+    
+    <!--添加语句的字段列表-->
+    <sql id="insertColumn">
+        <if test="name != null and name != ''">
+                name,
+        </if>
+        <if test="email != null and email != ''">
+                email,
+        </if>
+        <if test="content != null and content != ''">
+                content,
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create,
+        </if>
+        gmt_modified
+    </sql>
+    
+    <!--添加语句的值列表-->
+        <sql id="insertValue">
+        <if test="name != null and name != ''">
+                #{name},
+        </if>
+        <if test="email != null and email != ''">
+                #{email},
+        </if>
+        <if test="content != null and content != ''">
+                #{content},
+        </if>
+        <if test="gmtCreate != null">
+                #{gmtCreate},
+        </if>
+        <if test="gmtModified != null">
+                #{gmtModified},
+        </if>
+    </sql>
+    
+    <!--通用对MessageBoard各个属性的值的非空判断，Insert、Update使用-->
+    <sql id="commonsValue">
+        <if test="name != null and name != ''">
+                name = #{name},
+        </if>
+        <if test="email != null and email != ''">
+                email = #{email},
+        </if>
+        <if test="content != null and content != ''">
+                content = #{content},
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate},
+        </if>
+        gmt_modified = current_timestamp()
+    </sql>
+    
+        <!--通用对MessageBoard各个属性的值的非空判断,Where查询使用-->
+    <sql id="commonsQuery">
+        <if test="name != null and name != ''">
+                and name = #{name}
+        </if>
+        <if test="email != null and email != ''">
+                and email = #{email}
+        </if>
+        <if test="content != null and content != ''">
+                and content = #{content}
+        </if>
+        <if test="gmtCreate != null">
+                and gmt_create = #{gmtCreate}
+        </if>
+        <if test="gmtModified != null">
+                and gmt_modified = #{gmtModified}
+        </if>
+    </sql>
+    
+    <!--新增message_board:哪个字段不为空就添加哪列数据,返回自增主键-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into message_board(name,email,content,gmt_create,gmt_modified) values (#{name},#{email},#{content},#{gmtCreate},current_timestamp());
+    </insert>
+   
+    <!--删除message_board:通过主键-->
+    <delete id="deleteById">
+        delete from message_board where id = #{id}
+    </delete>
+    
+    <!--查询单个message_board-->
+    <select id="getById" resultMap="MessageBoardMap">
+        select * from message_board where id = #{id}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="listMessageBoards" resultMap="MessageBoardMap">
+        select * from message_board
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsQuery"></include>
+        </trim>
+        order by gmt_create desc
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update message_board
+        <set>
+            <include refid="commonsValue"></include>
+            gmt_modified = current_timestamp()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+</mapper>

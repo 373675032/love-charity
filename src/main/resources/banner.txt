@@ -1,0 +1,17 @@
+    __                               __               _ __
+   / /   ____ _   _____        _____/ /_  ____ ______(_) /___  __
+  / /   / __ \ | / / _ \______/ ___/ __ \/ __ `/ ___/ / __/ / / /
+ / /___/ /_/ / |/ /  __/_____/ /__/ / / / /_/ / /  / / /_/ /_/ /
+/_____/\____/|___/\___/      \___/_/ /_/\__,_/_/  /_/\__/\__, /
+                                                        /____/
+
+#==========================================================================
+# Important Note: This project is open-source and free! The original author is Xue Wei, and it is strictly prohibited to sell it privately.
+#==========================================================================
+# Blog: http://xuewei.world
+#==========================================================================
+# From time to time, I will receive reminders from fans, and some people will resell my open source projects for profit.
+# There have been cases where fans paid money, but the other party only sent them the code and disappeared.
+# Eventually, I was able to track them down based on clues...
+# I hope that all friends will keep a sharp eye out and beware of being deceived!
+#==========================================================================

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header id="header">
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-inner">
+                <div class="top-element">
+                    <div class="top-left-elements">
+                        <div class="element schedule">
+                            <div>热心公益，助人为乐（本项目免费开源，项目地址：<a href="https://github.com/373675032/love-charity">点击访问</a>，原创作者：<a
+                                    href="http://xuewei.world">薛伟同学</a>）</div>
+                        </div>
+                    </div>
+                    <div class="top-right-elements">
+                        <div class="element">
+                            <ul class="top-social" th:if="${session.loginUser == null}">
+                                <li class="twitter"><a href="login-page">登录</a></li>
+                                <li class="instagram"><a href="register-page">注册</a></li>
+                            </ul>
+                            <ul class="top-social">
+                                <li class="twitter"  th:if="${session.loginUser != null}"><a href="dashboard">进入后台</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="nav-bar">
+        <div class="container">
+            <div class="navigation">
+                <div class="logo">
+                    <a href="index">
+                        <img src="front/images/aicishan.png" alt="Oelfare">
+                    </a>
+                </div>
+                <nav id="flexmenu">
+                    <div class="nav-inner">
+                        <div id="mobile-toggle" class="mobile-btn"></div>
+                        <ul id="menu-main-menu" class="main-menu">
+                            <li th:class="${currUri=='index'?'menu-item current-menu-item active':'menu-item'}">
+                                <a href="index">主页</a>
+                            </li>
+                            <li th:class="${currUri=='projects'?'menu-item current-menu-item active':'menu-item'}">
+                                <a href="projects">公益项目</a>
+                            </li>
+                            <li th:class="${currUri=='activities'?'menu-item current-menu-item active':'menu-item'}">
+                                <a href="activities">平台活动</a>
+                            </li>
+                            <li th:class="${currUri=='articles'?'menu-item current-menu-item active':'menu-item'}">
+                                <a href="articles">爱心广场</a>
+                            </li>
+                            <li th:class="${currUri=='board'?'menu-item current-menu-item active':'menu-item'}">
+                                <a href="board">留言板</a>
+                            </li>
+                            <li class="menu-item menu-item-has-children"><span class="submenu-button"></span><a href="#">更多</a>
+                                <ul class="sub-menu">
+                                    <li th:if="${link.type == 1}" th:each="link:${links}" class="menu-item">
+                                        <a th:href="@{${link.targetUrl}}">[[${link.name}]] <div style="float: right" class="badge badge-danger">推荐</div></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="element phone">
+                    <img src="front/images/phone.png" alt="phone"><div><span>联系我们</span><br />400-888-666</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- 底部 -->
+<footer id="footer" class="footer wow fadeInUp">
+    <div class="footer-above">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="footer_widget">
+                        <div class="widget-title">
+                            <h4>友情链接</h4>
+                        </div>
+                        <div class="footer_nav">
+                            <ul>
+                                <li th:if="${link.type == 2}" th:each="link:${links}" class="menu-item">
+                                    <a th:href="@{${link.targetUrl}}" th:text="${link.name}"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="footer_widget">
+                        <div class="widget-title">
+                            <h4>便捷通道</h4>
+                        </div>
+                        <div class="footer_nav">
+                            <ul>
+                                <li class="menu-item"><a href="articles"><i class="ion-md-arrow-forward"></i> 求助广场</a></li>
+                                <li class="menu-item"><a href="projects"><i class="ion-md-arrow-forward"></i> 公益项目</a></li>
+                                <li class="menu-item"><a href="activities"><i class="ion-md-arrow-forward"></i> 平台活动</a></li>
+                                <li class="menu-item"><a href="board"><i class="ion-md-arrow-forward"></i> 留言板</a></li>
+                                <li class="menu-item"><a href="login-page"><i class="ion-md-arrow-forward"></i> 登陆</a></li>
+                                <li class="menu-item"><a href="register-page"><i class="ion-md-arrow-forward"></i> 注册</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="footer_widget">
+                        <div class="widget-title">
+                            <h4>联系我们</h4>
+                        </div>
+                        <div class="address_content">
+                            <ul>
+                                <li><img src="front/images/phone2.png" alt="icon"><span>电话</span> 400-888-666</li>
+                                <li><img src="front/images/mail.png" alt="icon"><span>邮箱</span> isxuewei@qq.com</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="footer_widget">
+                        <div class="widget-title">
+                            <h4>我要反馈</h4>
+                        </div>
+                        <div class="address_content" style="color: #9fa1a9">
+                            这里是爱慈善公益平台，在这里你可以寻求帮助，也可以帮助他人。如果你有任何意见，欢迎点击
+                            <a href="feedback">此链接</a>进行反馈！
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="footer_bottom_inner">
+                <div class="logo-footer">
+                </div>
+                <div class="copyright">
+                    <p> &copy; 版权所有 <a href="http://xuewei.world">薛伟同学</a></p>
+                    <p> 备案号: <a href="http://www.beian.miit.gov.cn/">XXXXXXXXX</a>
+                </div>
+                <div class="terms_nav">
+                    <ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

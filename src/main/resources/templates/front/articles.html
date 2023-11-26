@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Meta Tags -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <meta name="description" content="Oellfare - Charity Template">
+        <meta name="author" content="">
+
+        <!-- Page Title -->
+        <title>爱慈善公益-求助广场</title>
+
+        <!-- Favicon and Touch Icons -->
+        <link href="front/images/logo.jpg" rel="shortcut icon" type="image/png">
+
+        <!-- Lead Style -->
+        <link href="front/css/style.css" rel="stylesheet" type="text/css">
+
+    </head>
+    <!--PreLoader-->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="siteloading-preloader"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+    <body>
+        <div th:replace="commons/front-bar::#header(currUri='articles',links=${links})"></div>
+
+        <div class="main-wrapper">
+
+            <div class="section causes">
+                <div class="container">
+                    <div class="power_heading_wrapper text-center">
+                        <div class="power_heading_icon"><img src="front/images/header_icon1.png" alt=""></div>
+                        <h1 class="power_title ">最新的求助文章</h1>
+                        <div class="power_title_line"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6" th:each="articleVo:${articles}">
+                            <div class="power_blog style_2">
+                                <div class="power_blog_wrapper">
+                                    <div class="power_blog_image">
+                                        <img th:src="${articleVo.article.img}" alt="" style="width: 100%;height: 200px">
+                                    </div>
+                                    <div class="power_blog_content">
+                                        <div class="power_blog_date" th:text="${#dates.format(articleVo.article.gmtCreate,'yyyy年MM月dd日 HH:mm:ss')}"></div>
+                                        <div class="power_blog_date" style="background: blue" th:text="${articleVo.userName}"></div>
+                                        <h5><a th:href="@{article(id=${articleVo.article.id})}" th:text="${articleVo.article.title}"></a></h5>
+                                        <p th:if="${articleVo.article.content.length() > 100}" th:text="${articleVo.article.content.substring(0,100)}">
+                                        </p>
+                                        <p th:if="${articleVo.article.content.length() <= 100}" th:text="${articleVo.article.content}">
+                                        </p>
+                                        <div class="power_button_group">
+                                            <a th:href="@{article(id=${articleVo.article.id})}" class="power_button alt effect_1">
+                                                <span class="button_value">阅读原文</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagination-div">
+                        <ul class="pagination">
+                            <li th:if="${page != 1}">
+                                <a class="disabled" href="articles?page=1">第一页</a>
+                            </li>
+                            <li><a class="page-number" th:href="@{articles(page=${page -1})}" th:if="${page > 2}">[[${page-1}]]</a></li>
+                            <li><a class="page-number current" href="javaScript:Void(0)">[[${page}]]</a></li>
+                            <li><a class="page-number" th:href="@{articles(page=${page +1})}" th:if="${page < (totalPage -1)}">[[${page + 1}]]</a></li>
+
+                            <li th:if="${page != totalPage}"><a th:href="@{articles(page=${totalPage})}">最后一页</a></li>
+                            <li>共：[[${totalPage}]]页</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div th:replace="commons/front-bar::#footer"></div>
+
+         <!-- All JavaScript Files
+        ================================================== -->
+
+        <script src="common/js/jquery.min.js"></script>
+        <script src="front/js/bootstrap.min.js"></script>
+        <script src="front/js/menu.js"></script>
+        <script src="front/js/select2.js"></script>
+        <script src="front/js/jquery.fancybox.min.js"></script>
+        <script src="front/js/owl.carousel.min.js"></script>
+        <script src="front/js/spectragram.min.js"></script>
+        <script src="front/js/wow.js"></script>
+        <script src="front/js/custom.js"></script>
+        
+    </body>
+</html>

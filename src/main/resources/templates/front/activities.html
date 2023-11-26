@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Meta Tags -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <meta name="description" content="Oellfare - Charity Template">
+        <meta name="author" content="">
+
+        <!-- Page Title -->
+        <title>爱慈善公益-平台活动</title>
+
+        <!-- Favicon and Touch Icons -->
+        <link href="front/images/logo.jpg" rel="shortcut icon" type="image/png">
+
+        <!-- Lead Style -->
+        <link href="front/css/style.css" rel="stylesheet" type="text/css">
+
+    </head>
+    <!--PreLoader-->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="siteloading-preloader"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+    <body>
+        <div th:replace="commons/front-bar::#header(currUri='activities',links=${links})"></div>
+
+        <div class="page-header">
+            <div class="page-header-content">
+                <div class="container">
+                    <h2 class="heading">最新活动</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-wrapper">
+
+            <div class="section blog">
+                <div class="container">
+                    <div class="power_blog style_3" th:each="article:${articles}">
+                        <div class="power_blog_wrapper">
+                            <div class="power_blog_image">
+                                <img style="width: 100%;height: 300px" th:src="${article.img}" alt="">
+                            </div>
+                            <div class="power_blog_content">
+                                <ul class="post_meta">
+                                    <li><span class="date">发布于：<a>[[${#dates.format(article.gmtCreate,'yyyy年MM月dd日 HH:mm:ss')}]]</a></span></li>
+                                    <li><span class="author"> 阅读量: <a th:text="${article.readCount}"></a></span></li>
+                                </ul>
+                                <h5><a th:href="@{activity(id=${article.id})}" th:text="${article.title}"></a></h5>
+                                <div class="power_button_group">
+                                    <a th:href="@{activity(id=${article.id})}" class="power_button effect_1">
+                                        <span class="button_value">查看活动</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+
+                    <div class="pagination-div">
+                        <ul class="pagination">
+                            <li th:if="${page != 1}">
+                                <a class="disabled" href="articles?page=1">第一页</a>
+                            </li>
+                            <li><a class="page-number" th:href="@{articles(page=${page -1})}" th:if="${page > 2}">[[${page-1}]]</a></li>
+                            <li><a class="page-number current" href="javaScript:Void(0)">[[${page}]]</a></li>
+                            <li><a class="page-number" th:href="@{articles(page=${page +1})}" th:if="${page < (totalPage -1)}">[[${page + 1}]]</a></li>
+
+                            <li th:if="${page != totalPage}"><a th:href="@{articles(page=${totalPage})}">最后一页</a></li>
+                            <li>共：[[${totalPage}]]页</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div th:replace="commons/front-bar::#footer"></div>
+
+         <!-- All JavaScript Files
+        ================================================== -->
+
+        <script src="common/js/jquery.min.js"></script>
+        <script src="front/js/bootstrap.min.js"></script>
+        <script src="front/js/menu.js"></script>
+        <script src="front/js/select2.js"></script>
+        <script src="front/js/jquery.fancybox.min.js"></script>
+        <script src="front/js/owl.carousel.min.js"></script>
+        <script src="front/js/spectragram.min.js"></script>
+        <script src="front/js/wow.js"></script>
+        <script src="front/js/custom.js"></script>
+        
+    </body>
+</html>

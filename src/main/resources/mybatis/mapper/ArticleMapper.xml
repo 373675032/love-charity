@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.charity.mapper.ArticleMapper">
+    <!--开启二级缓存,使用Ehcache缓存框架-->
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <!--article的映射结果集-->
+    <resultMap type="com.charity.entity.Article" id="ArticleMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="readCount" column="read_count" jdbcType="INTEGER"/>
+        <result property="img" column="img" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="isChecked" column="is_checked" jdbcType="INTEGER"/>
+        <result property="info" column="info" jdbcType="VARCHAR"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <!--全部字段-->
+    <sql id="allColumn"> id, user_id, title, content, status, read_count, img, type, is_checked, info, gmt_create, gmt_modified </sql>
+    
+    <!--添加语句的字段列表-->
+    <sql id="insertColumn">
+        <if test="userId != null">
+                user_id,
+        </if>
+        <if test="title != null and title != ''">
+                title,
+        </if>
+        <if test="content != null and content != ''">
+                content,
+        </if>
+        <if test="status != null">
+                status,
+        </if>
+        <if test="readCount != null">
+                read_count,
+        </if>
+        <if test="img != null and img != ''">
+                img,
+        </if>
+        <if test="type != null">
+                type,
+        </if>
+        <if test="isChecked != null">
+                is_checked,
+        </if>
+        <if test="info != null and info != ''">
+                info,
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create,
+        </if>
+        gmt_modified
+    </sql>
+    
+    <!--添加语句的值列表-->
+        <sql id="insertValue">
+        <if test="userId != null">
+                #{userId},
+        </if>
+        <if test="title != null and title != ''">
+                #{title},
+        </if>
+        <if test="content != null and content != ''">
+                #{content},
+        </if>
+        <if test="status != null">
+                #{status},
+        </if>
+        <if test="readCount != null">
+                #{readCount},
+        </if>
+        <if test="img != null and img != ''">
+                #{img},
+        </if>
+        <if test="type != null">
+                #{type},
+        </if>
+        <if test="isChecked != null">
+                #{isChecked},
+        </if>
+        <if test="info != null and info != ''">
+                #{info},
+        </if>
+        <if test="gmtCreate != null">
+                #{gmtCreate},
+        </if>
+        <if test="gmtModified != null">
+                #{gmtModified},
+        </if>
+    </sql>
+    
+    <!--通用对Article各个属性的值的非空判断，Insert、Update使用-->
+    <sql id="commonsValue">
+        <if test="userId != null">
+                user_id = #{userId},
+        </if>
+        <if test="title != null and title != ''">
+                title = #{title},
+        </if>
+        <if test="content != null and content != ''">
+                content = #{content},
+        </if>
+        <if test="status != null">
+                status = #{status},
+        </if>
+        <if test="readCount != null">
+                read_count = #{readCount},
+        </if>
+        <if test="img != null and img != ''">
+                img = #{img},
+        </if>
+        <if test="type != null">
+                type = #{type},
+        </if>
+        <if test="isChecked != null">
+                is_checked = #{isChecked},
+        </if>
+        <if test="info != null and info != ''">
+                info = #{info},
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate},
+        </if>
+    </sql>
+    
+    <!--通用对Article各个属性的值的非空判断,Where查询使用-->
+    <sql id="commonsQuery">
+        <if test="userId != null">
+                and user_id = #{userId}
+        </if>
+        <if test="title != null and title != ''">
+                and title = #{title}
+        </if>
+        <if test="content != null and content != ''">
+                and content = #{content}
+        </if>
+        <if test="status != null">
+                and status = #{status}
+        </if>
+        <if test="readCount != null">
+                and read_count = #{readCount}
+        </if>
+        <if test="img != null and img != ''">
+                and img = #{img}
+        </if>
+        <if test="type != null">
+                and type = #{type}
+        </if>
+        <if test="isChecked != null">
+                and is_checked = #{isChecked}
+        </if>
+        <if test="info != null and info != ''">
+                and info = #{info}
+        </if>
+        <if test="gmtCreate != null">
+                and gmt_create = #{gmtCreate}
+        </if>
+        <if test="gmtModified != null">
+                and gmt_modified = #{gmtModified}
+        </if>
+    </sql>
+    
+    <!--新增article:哪个字段不为空就添加哪列数据,返回自增主键-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertValue"/>
+        </trim>
+    </insert>
+
+    <!--增加阅读量-->
+    <update id="addReadCount">
+        update article set read_count = read_count + 1 where id = #{id}
+    </update>
+
+    <!--删除article:通过主键-->
+    <delete id="deleteById">
+        delete from article
+        <where>
+            id = #{id}
+        </where>
+    </delete>
+
+    <!--删除Article-->
+    <delete id="deleteByUserId">
+        delete from article
+        <where>
+            user_id = #{uid}
+        </where>
+    </delete>
+
+    <!--查询单个article-->
+    <select id="getById" resultMap="ArticleMap">
+        select
+        <include refid="allColumn"></include>
+        from article
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="listArticles" resultMap="ArticleMap">
+        select
+          <include refid="allColumn"></include>
+        from article
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsQuery"></include>
+        </trim>
+        order by gmt_create desc
+    </select>
+
+    <!--获取文章的数量-->
+    <select id="countArticles" resultType="java.lang.Integer">
+        select count(*)
+        from article
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsQuery"></include>
+        </trim>
+        order by gmt_create desc
+    </select>
+
+    <!--根据文章ID获取参加的活动-->
+    <select id="getActivityByArticleId" resultType="com.charity.entity.Article">
+        select * FROM article WHERE id = (SELECT article_activity.activity_article_id from article_activity WHERE article_id = #{id});
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update article
+        <set>
+            <include refid="commonsValue"></include>
+            gmt_modified = CURRENT_TIMESTAMP()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <select id="listArticleByTitle" resultType="com.charity.entity.Article">
+        select <include refid="allColumn"></include> FROM article WHERE user_id = #{id} and title =#{title};
+    </select>
+</mapper>

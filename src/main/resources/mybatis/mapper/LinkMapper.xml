@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.charity.mapper.LinkMapper">
+    <!--开启二级缓存,使用Ehcache缓存框架-->
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <!--link的映射结果集-->
+    <resultMap type="com.charity.entity.Link" id="LinkMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="targetUrl" column="target_url" jdbcType="VARCHAR"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <!--全部字段-->
+    <sql id="allColumn"> id, name, target_url, gmt_create, gmt_modified </sql>
+    
+    <!--添加语句的字段列表-->
+    <sql id="insertColumn">
+        <if test="name != null and name != ''">
+                name,
+        </if>
+        <if test="targetUrl != null and targetUrl != ''">
+                target_url,
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create,
+        </if>
+        gmt_modified
+    </sql>
+    
+    <!--添加语句的值列表-->
+        <sql id="insertValue">
+        <if test="name != null and name != ''">
+                #{name},
+        </if>
+        <if test="targetUrl != null and targetUrl != ''">
+                #{targetUrl},
+        </if>
+        <if test="gmtCreate != null">
+                #{gmtCreate},
+        </if>
+        <if test="gmtModified != null">
+                #{gmtModified},
+        </if>
+    </sql>
+    
+    <!--通用对Link各个属性的值的非空判断，Insert、Update使用-->
+    <sql id="commonsValue">
+        <if test="name != null and name != ''">
+                name = #{name},
+        </if>
+        <if test="targetUrl != null and targetUrl != ''">
+                target_url = #{targetUrl},
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate},
+        </if>
+    </sql>
+    
+    <!--通用对Link各个属性的值的非空判断,Where查询使用-->
+    <sql id="commonsQuery">
+        <if test="name != null and name != ''">
+                and name = #{name}
+        </if>
+        <if test="targetUrl != null and targetUrl != ''">
+                and target_url = #{targetUrl}
+        </if>
+        <if test="gmtCreate != null">
+                and gmt_create = #{gmtCreate}
+        </if>
+        <if test="gmtModified != null">
+                and gmt_modified = #{gmtModified}
+        </if>
+    </sql>
+    
+    <!--新增link:哪个字段不为空就添加哪列数据,返回自增主键-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into link(name, target_url,type,gmt_create) values (#{name},#{targetUrl},#{type},CURRENT_TIMESTAMP())
+    </insert>
+   
+    <!--删除link:通过主键-->
+    <delete id="deleteById">
+        delete from link where id = #{id}
+    </delete>
+    
+    <!--查询单个link-->
+    <select id="getById" resultMap="LinkMap">
+        select * from link where id = #{id}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="listLinks" resultMap="LinkMap">
+        select * from link
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsQuery"></include>
+        </trim>
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update link
+        <set>
+            <include refid="commonsValue"></include>
+            gmt_modified = CURRENT_TIMESTAMP()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+</mapper>

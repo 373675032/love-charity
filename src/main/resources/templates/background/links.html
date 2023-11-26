@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
+		<title>链接管理-链接和菜单</title>
+
+		<link rel="stylesheet" href="background/modules/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="background/modules/ionicons/css/ionicons.min.css">
+		<link rel="stylesheet" href="background/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
+
+		<link rel="stylesheet" href="background/modules/summernote/summernote-lite.css">
+		<link rel="stylesheet" href="background/modules/flag-icon-css/css/flag-icon.min.css">
+		<link rel="stylesheet" href="background/css/demo.css">
+		<link rel="stylesheet" href="background/css/style.css">
+		<link rel="stylesheet" href="background/css/common.css"/>
+		<link rel="stylesheet" href="common/datatable/dataTables.bootstrap4.min.css"/>
+	</head>
+
+	<body>
+	<div id="app">
+		<div class="main-wrapper">
+			<div class="navbar-bg"></div>
+
+				<div th:replace="commons/admin-bar::navbar(currUri='admin-link')"></div>
+				<div th:replace="commons/admin-bar::sidebar(currUri='admin-link')"></div>
+				<div class="main-content">
+					<section class="section">
+						<h1 class="section-header">
+							<div><i class="icon ion ion-at"></i> 链接管理</div>
+						</h1>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<div class="card mb-3">
+									<div class="card-body">
+										<div class="row">
+											<div class="form-group col-3">
+												<input id="name" type="text" class="form-control" autocomplete="off" placeholder="此处填写链接名称">
+											</div>
+											<div class="form-group col-5">
+												<input id="url" type="text" class="form-control" autocomplete="off" placeholder="此处填写链接地址，例如：http://xuewei.world">
+											</div>
+											<div class="form-group col-2">
+												<select class="form-control" id="type">
+													<option th:value="1">顶部菜单</option>
+													<option th:value="2">友情链接</option>
+												</select>
+											</div>
+											<div class="form-group col-2">
+												<button class="btn btn-success btn-outline-success" onclick="addLink()">添加</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-12">
+								<div class="card mb-3">
+									<div class="card-body">
+										<div class="table-responsive">
+											<table id="example1" class="table table-bordered table-hover display" style="text-align: center">
+												<thead>
+												<tr>
+													<th>序号</th>
+													<th>名称</th>
+													<th>链接地址</th>
+													<th>类型</th>
+													<th>添加时间</th>
+													<th>操作</th>
+												</tr>
+												</thead>
+												<tbody style="font-size: 13px">
+												<tr th:each="link,linkStat:${links}">
+													<td th:text="${linkStat.index+1}"></td>
+													<td th:text="${link.name}"></td>
+													<td>
+														<a th:href="@{${link.targetUrl}}" th:title="${link.name}" th:text="${link.targetUrl}"></a>
+													</td>
+													<td th:if="${link.type == 1}">顶部菜单</td>
+													<td th:if="${link.type == 2}">友情链接</td>
+													<td th:text="${#dates.format(link.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></td>
+													<td>
+														<button th:onclick="deleteLink([[${link.id}]])"class="btn btn-sm btn-outline-danger">删除</button>
+													</td>
+												</tr>
+												</tbody>
+												<thead>
+												</thead>
+											</table>
+										</div>
+
+									</div>
+								</div><!-- end card-->
+							</div>
+						</div>
+					</section>
+				</div>
+				<div th:replace="commons/admin-bar::footer"></div>
+			</div>
+		</div>
+		<script src="background/modules/jquery.min.js"></script>
+		<script src="background/modules/popper.js"></script>
+		<script src="background/modules/tooltip.js"></script>
+		<script src="background/modules/bootstrap/js/bootstrap.min.js"></script>
+		<script src="background/modules/nicescroll/jquery.nicescroll.min.js"></script>
+		<script src="background/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
+		<script src="background/js/sa-functions.js"></script>
+
+		<script src="background/modules/chart.min.js"></script>
+		<script src="background/modules/summernote/summernote-lite.js"></script>
+		
+		<script src="background/js/scripts.js"></script>
+		<script src="background/js/custom.js"></script>
+		<script src="common/datatable/jquery.dataTables.min.js"></script>
+		<script src="common/datatable/dataTables.bootstrap4.min.js"></script>
+		<script src="common/js/link.js"></script>
+		<script>
+		// START CODE FOR BASIC DATA TABLE
+		$(document).ready(function() {
+			$('#example1').DataTable({
+				language: {
+					"sProcessing": "处理中...",
+					"sLengthMenu": "显示 _MENU_ 项结果",
+					"sZeroRecords": "没有匹配结果",
+					"sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+					"sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+					"sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+					"sInfoPostFix": "",
+					"sSearch": "搜索:",
+					"sUrl": "",
+					"sEmptyTable": "表中数据为空",
+					"sLoadingRecords": "载入中...",
+					"sInfoThousands": ",",
+					"oPaginate": {
+						"sFirst": "首页",
+						"sPrevious": "上页",
+						"sNext": "下页",
+						"sLast": "末页"
+					},
+					"oAria": {
+						"sSortAscending": ": 以升序排列此列",
+						"sSortDescending": ": 以降序排列此列"
+					}
+				},
+				"aoColumnDefs": [ { "bSortable": false, "aTargets": [ 1,2,3,5 ]}],
+				"order": [4, "desc"]
+			});
+		});
+		// END CODE FOR BASIC DATA TABLE
+
+
+		// START CODE FOR Child rows (show extra / detailed information) DATA TABLE
+
+
+	</script>
+
+	</body>
+</html>

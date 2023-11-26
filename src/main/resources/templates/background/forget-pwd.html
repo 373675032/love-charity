@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
+          name="viewport">
+    <title>忘记密码</title>
+
+    <link rel="stylesheet" href="background/modules/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="background/modules/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="background/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
+
+    <link rel="stylesheet" href="background/css/demo.css">
+    <link rel="stylesheet" href="background/css/style.css">
+    <script src="background/js/message.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <section class="section">
+        <div class="container mt-5">
+            <div class="row">
+                <div
+                        class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-8 offset-xl-2">
+                    <div class="login-brand">
+                        爱慈善-忘记密码
+                    </div>
+
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h4>忘记密码</h4>
+                        </div>
+                        <div class="card-body">
+                            <form >
+                                <div class="form-group">
+                                    <label for="email">邮箱</label>
+                                    <input id="email" type="email" class="form-control" name="email"
+                                           required="required">
+                                    <div class="invalid-feedback">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-6">
+                                        <label for="code" class="d-block">验证码</label>
+                                        <input id="code" type="text" class="form-control" name="code" required="required">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="" class="d-block">获取验证码</label>
+                                        <input autocomplete="off" id="btnSendCode1" type="button" class="btn btn-default" value="获取验证码"
+                                               onClick="sendMessage1()"/>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-6">
+                                        <label for="frist_pwd">新密码</label>
+                                        <input id="frist_pwd" type="password" class="form-control" name="password"
+                                               autofocus required="required">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="second_pwd">确认新密码</label>
+                                        <input id="second_pwd" type="password" class="form-control" name="second_pwd"
+                                               autofocus required="required">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary btn-block" onclick="submitForm()">
+                                        提交
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="mt-5 text-muted text-center">
+                         <a href="login-page">返回登录</a>
+                    </div>
+                    <div class="simple-footer">
+                        Copyright &copy; <a href="index">爱慈善公益平台</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    var emailReg = /^[\da-z]+([\-\.\_]?[\da-z]+)*@[\da-z]+([\-\.]?[\da-z]+)*(\.[a-z]{2,})+$/; //邮箱正则
+    var userNameReg = /^[\u4e00-\u9fa5\w]{1,6}$/; //用户名正则
+    var count = 60; //间隔函数，1秒执行
+    var InterValObj1; //timer变量，控制时间
+    var curCount1; //当前剩余秒数
+    /*第一*/
+    function sendMessage1() {
+        curCount1 = count;
+        var email = $.trim($('#email').val());
+        var userName = $.trim($(".userName").val());
+        var password = $.trim($("#frist_pwd").val());
+        var password1 = $.trim($("#second_pwd").val());
+        if (!emailReg.test(email)) {
+            alert("邮箱格式错误！");
+            return false;
+        }
+        if (password === "") {
+            alert("密码不能为空！");
+            return false;
+        }
+        if (password != password1) {
+            alert("输入的密码不一致！");
+            return false;
+        }
+        //设置button效果，开始计时
+        $("#btnSendCode1").attr("disabled", "true");
+        $("#btnSendCode1").val(+curCount1 + "S 重发");
+        InterValObj1 = window.setInterval(SetRemainTime1, 1000); //启动计时器，1秒执行一次
+        //向后台发送处理数据
+        $.ajax({
+            type: "GET",
+            url: "sendCode",
+            async: false,
+            contentType: "application/json; charset=utf-8",
+            dataType: "text",
+            data: {
+                email: email
+            },
+            success: function (result) {
+                if (result == 500) {
+                    window.clearInterval(InterValObj1);
+                    $("#btnSendCode1").val("获取验证码");
+                    $("#btnSendCode1").removeAttr("disabled"); //启用按钮
+                    alert("这个邮箱已经被使用了哦！");
+                }
+                return false;
+            },
+            error: function (msg) {
+                return false;
+            }
+        });
+    }
+
+    function SetRemainTime1() {
+        if (curCount1 == 0) {
+            window.clearInterval(InterValObj1); //停止计时器
+            $("#btnSendCode1").removeAttr("disabled"); //启用按钮
+            $("#btnSendCode1").val("重新发送");
+        } else {
+            curCount1--;
+            $("#btnSendCode1").val(+curCount1 + "S 重发");
+        }
+    }
+    //忘记密码信息提交
+    function submitForm() {
+        var email = $.trim($('#email').val());
+        var password = $.trim($("#frist_pwd").val());
+        var password1 = $.trim($("#second_pwd").val());
+        var code = $.trim($("#code").val());
+        $.ajax({
+            type: "POST",
+            url: "updateUserPwd",
+            data: {
+                email:email,
+                oldPwd:password,
+                newPwd:password1,
+                code:code
+            },
+            dataType: "json",
+            success: function(data){
+                if (data['code']== 200){
+                    alert("密码修改成功！");
+                    $('#email').val("");
+                    $("#frist_pwd").val("");
+                    $("#second_pwd").val("");
+                    $("#code").val("");
+                    window.location.reload();
+                }else {
+                    alert(data.message);
+                }
+            }
+        });
+    }
+
+</script>
+
+<script src="background/modules/jquery.min.js"></script>
+<script src="background/modules/popper.js"></script>
+<script src="background/modules/tooltip.js"></script>
+<script src="background/modules/bootstrap/js/bootstrap.min.js"></script>
+<script src="background/modules/nicescroll/jquery.nicescroll.min.js"></script>
+<script src="background/modules/moment.min.js"></script>
+<script src="background/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
+<script src="background/js/sa-functions.js"></script>
+<script src="background/js/profile.js"></script>
+
+
+<script src="background/js/scripts.js"></script>
+<script src="background/js/custom.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Meta Tags -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <meta name="description" content="Oellfare - Charity Template">
+        <meta name="author" content="">
+
+        <!-- Page Title -->
+        <title>预览-[[${article.title}]]-爱慈善公益</title>
+
+        <!-- Favicon and Touch Icons -->
+        <link href="front/images/logo.jpg" rel="shortcut icon" type="image/png">
+
+        <!--引入Jquery-->
+        <script src="common/js/jquery-3.4.1.js"></script>
+        <!--引入MarkDown-->
+        <link rel="stylesheet" type="text/css" href="common/EditorMD/css/editormd.preview.css" />
+        <link rel="stylesheet" type="text/css" href="common/css/xtiper.css" />
+        <script type="text/javascript" src="common/EditorMD/lib/marked.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/prettify.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/raphael.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/underscore.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/sequence-diagram.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/flowchart.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/lib/jquery.flowchart.min.js"></script>
+        <script type="text/javascript" src="common/EditorMD/editormd.amd.min.js"></script>
+        <script type="text/javascript" src="common/js/xtiper.min.js"></script>
+        <script type="text/javascript" src="common/js/comment.js"></script>
+        <!-- Lead Style -->
+        <link href="front/css/style.css" rel="stylesheet" type="text/css">
+    </head>
+    <!--PreLoader-->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="siteloading-preloader"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+    <body>
+        <div th:replace="commons/front-bar::#header(currUri='article')"></div>
+
+        <div class="main-wrapper">
+
+            <div class="section" style="padding-top: 0px;">
+                <div class="container">
+                    <div class="power_event_details_top">
+                        <div class="power_event_details_inner">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 main-content">
+                                    <div class="power_blog_details">
+                                        <div class="power_blog_wrapper">
+                                            <div class="post_header">
+                                                <ul class="tag_list">
+                                                    <li><a style="background: blue">作者：[[${userName}]]</a></li>
+                                                    <li th:if="${activity != null}"><a style="background: green" th:href="@{activity(id=${activity.id})}">参与活动： [[${activity.title}]]</a></li>
+                                                    <li><a style="background: orange" th:text="${article.readCount + '次阅读'}"></a></li>
+                                                    <li><a th:text="${#dates.format(article.gmtCreate,'yyyy年MM月dd日 HH:mm:ss')}"></a></li>
+                                                </ul>
+                                                <h2 class="post_title" style="margin-top: 0px" th:text="${article.title}"></h2>
+                                            </div>
+                                            <div class="power_blog_full_content">
+                                                <div id="doc-content" class="post-content" style="padding: 5px 0px 20px 0px">
+                                                    <textarea style="display:none;">[[${article.content}]]</textarea>
+                                                </div>
+                                                <script type="text/javascript">
+                                                    var testEditor;
+                                                    $(function () {
+                                                        testEditor = editormd.markdownToHTML("doc-content", {//注意：这里是上面DIV的id
+                                                            htmlDecode      : "style,script,iframe",  // you can filter tags decode
+                                                            taskList        : true,
+                                                            tex             : true,  // 默认不解析
+                                                            flowChart       : true,  // 默认不解析
+                                                            sequenceDiagram : true,  // 默认不解析
+                                                        });
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="comment_sec">
+                                        <div class="comment_form" style="margin-top: 20px">
+                                            <div class="comment_form_heading_wrapper" style="margin-bottom: 10px">
+                                                <h1 class="comment_title">发表评论</h1>
+                                                <h6 class="comment_sub_title">随时分享你的想法，我们会积极采纳意见！ </h6>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="form-group" style="margin-bottom: 0px">
+                                                        <textarea id="content" name="message" class="form-control" placeholder="此处填写评论内容..."></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <div class="power_button_group">
+                                                        <input class="power_button effect_1" type="submit" value="发表" name="submit">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="commons/front-bar::#footer"></div>
+
+         <!-- All JavaScript Files
+        ================================================== -->
+
+        <script src="common/js/jquery.min.js"></script>
+        <script src="front/js/bootstrap.min.js"></script>
+        <script src="front/js/menu.js"></script>
+        <script src="front/js/select2.js"></script>
+        <script src="front/js/jquery.fancybox.min.js"></script>
+        <script src="front/js/owl.carousel.min.js"></script>
+        <script src="front/js/spectragram.min.js"></script>
+        <script src="front/js/wow.js"></script>
+        <script src="front/js/custom.js"></script>
+
+    </body>
+</html>

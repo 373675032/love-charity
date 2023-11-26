@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.charity.mapper.UserMapper">
+    <!--开启二级缓存,使用Ehcache缓存框架-->
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <!--user的映射结果集-->
+    <resultMap type="com.charity.entity.User" id="UserMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="INTEGER"/>
+        <result property="birthday" column="birthday" jdbcType="TIMESTAMP"/>
+        <result property="career" column="career" jdbcType="VARCHAR"/>
+        <result property="certificationId" column="certification_id" jdbcType="INTEGER"/>
+        <result property="img" column="img" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+        <result property="role" column="role" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--全部字段-->
+    <sql id="allColumn"> id, name, password, email, phone, address, sex, birthday, career, certification_id, img, status, gmt_create, gmt_modified,role </sql>
+
+    <!--添加语句的字段列表-->
+    <sql id="insertColumn">
+        <if test="name != null and name != ''">
+            name,
+        </if>
+        <if test="password != null and password != ''">
+            password,
+        </if>
+        <if test="email != null and email != ''">
+            email,
+        </if>
+        <if test="phone != null and phone != ''">
+            phone,
+        </if>
+        <if test="address != null and address != ''">
+            address,
+        </if>
+        <if test="sex != null">
+            sex,
+        </if>
+        <if test="birthday != null">
+            birthday,
+        </if>
+        <if test="career != null and career != ''">
+            career,
+        </if>
+        <if test="certificationId != null">
+            certification_id,
+        </if>
+        <if test="img != null and img != ''">
+            img,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+        <if test="gmtCreate != null">
+            gmt_create,
+        </if>
+            gmt_modified
+    </sql>
+
+    <!--添加语句的值列表-->
+    <sql id="insertValue">
+        <if test="name != null and name != ''">
+            #{name},
+        </if>
+        <if test="password != null and password != ''">
+            #{password},
+        </if>
+        <if test="email != null and email != ''">
+            #{email},
+        </if>
+        <if test="phone != null and phone != ''">
+            #{phone},
+        </if>
+        <if test="address != null and address != ''">
+            #{address},
+        </if>
+        <if test="sex != null">
+            #{sex},
+        </if>
+        <if test="birthday != null">
+            #{birthday},
+        </if>
+        <if test="career != null and career != ''">
+            #{career},
+        </if>
+        <if test="certificationId != null">
+            #{certificationId},
+        </if>
+        <if test="img != null and img != ''">
+            #{img},
+        </if>
+        <if test="status != null">
+            #{status},
+        </if>
+        <if test="gmtCreate != null">
+            #{gmtCreate},
+        </if>
+            current_timestamp()
+    </sql>
+
+    <!--通用对User各个属性的值的非空判断-->
+    <sql id="commonsValue">
+        <if test="name != null and name != ''">
+            name = #{name},
+        </if>
+        <if test="password != null and password != ''">
+            password = #{password},
+        </if>
+        <if test="email != null and email != ''">
+            email = #{email},
+        </if>
+        <if test="phone != null and phone != ''">
+            phone = #{phone},
+        </if>
+        <if test="address != null and address != ''">
+            address = #{address},
+        </if>
+        <if test="sex != null">
+            sex = #{sex},
+        </if>
+        <if test="birthday != null">
+            birthday = #{birthday},
+        </if>
+        <if test="career != null and career != ''">
+            career = #{career},
+        </if>
+        <if test="role != null">
+            role = #{role},
+        </if>
+        <if test="certificationId !=''">
+            certification_id = #{certificationId},
+        </if>
+        <if test="img != null and img != ''">
+            img = #{img},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+        <if test="gmtCreate != null">
+            gmt_create = #{gmtCreate},
+        </if>
+        <if test="gmtModified != null">
+            gmt_modified = #{gmtModified},
+        </if>
+    </sql>
+
+    <!--通用对User各个属性的值的非空判断-->
+    <sql id="commonsQuery">
+        <if test="name != null and name != ''">
+            and name = #{name}
+        </if>
+        <if test="password != null and password != ''">
+            and password = #{password}
+        </if>
+        <if test="email != null and email != ''">
+            and email = #{email}
+        </if>
+        <if test="phone != null and phone != ''">
+            and phone = #{phone}
+        </if>
+        <if test="address != null and address != ''">
+            and address = #{address}
+        </if>
+        <if test="sex != null">
+            and sex = #{sex}
+        </if>
+        <if test="birthday != null">
+            and birthday = #{birthday}
+        </if>
+        <if test="career != null and career != ''">
+            and career = #{career}
+        </if>
+        <if test="certificationId != null">
+            and certification_id = #{certificationId}
+        </if>
+        <if test="img != null and img != ''">
+            and img = #{img}
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="gmtCreate != null">
+            and gmt_create = #{gmtCreate}
+        </if>
+    </sql>
+
+    <!--新增user:哪个字段不为空就添加哪列数据,返回自增主键-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertValue"/>
+        </trim>
+    </insert>
+
+    <!--删除user:通过主键-->
+    <delete id="deleteById">
+        delete from user
+        <where>
+            id = #{id}
+        </where>
+    </delete>
+
+    <!--删除用户的认证信息-->
+    <update id="deleteCertification">
+        update user set gmt_modified = current_timestamp() and certification_id = null where id = #{id}
+    </update>
+
+    <!--查询单个user-->
+    <select id="getById" resultMap="UserMap">
+        select
+        <include refid="allColumn"></include>
+        from user
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="listUsers" resultMap="UserMap">
+        select
+        <include refid="allColumn"></include>
+        from user
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsQuery"></include>
+        </trim>
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update user
+        <set>
+            <include refid="commonsValue"></include>
+            gmt_modified = current_timestamp()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <!--通过邮箱作为筛选条件查询-->
+    <select id="getUserByEmail" resultMap="UserMap">
+        select
+        <include refid="allColumn"></include>
+        from user where email=#{email}
+    </select>
+
+    <!--根据邮箱修改验证码-->
+    <update id="updatePwdByEmail">
+        update user
+        <set>
+            <include refid="commonsValue"></include>
+            gmt_modified = current_timestamp()
+        </set>
+        <where>
+            email=#{email}
+        </where>
+    </update>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="getUserByName" resultMap="UserMap">
+        select
+        <include refid="allColumn"></include>
+        from user where name=#{name}
+    </select>
+
+</mapper>

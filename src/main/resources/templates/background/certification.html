@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
+          name="viewport">
+    <title>用户后台管理</title>
+
+    <link rel="stylesheet" href="background/modules/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="background/modules/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="background/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
+
+    <link rel="stylesheet" href="background/modules/summernote/summernote-lite.css">
+    <link rel="stylesheet" href="background/modules/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="background/css/demo.css">
+    <link rel="stylesheet" href="background/css/style.css">
+    <link rel="stylesheet" href="background/css/common.css"/>
+    <link rel="stylesheet" href="background/css/fileinput.min.css"/>
+    <script src="background/js/message.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <div class="main-wrapper">
+        <div class="navbar-bg"></div>
+
+        <div th:replace="commons/admin-bar::navbar"></div>
+        <div th:replace="commons/admin-bar::sidebar"></div>
+        <div class="main-content">
+            <section class="section">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <div class="float-right">
+                                    <a href="profile">我的资料</a>
+                                </div>
+                                <h5>提交认证</h5>
+                            </div>
+                            <div class="row">
+                                <div class="col-3"></div>
+                                <div class="card-body col-6">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="name">机构名称</label>
+                                            <input id="name" type="text" class="form-control" name="name" autofocus
+                                                   required="required" data-toggle="popover" data-placement="top"
+                                                   data-content="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">领导者姓名</label>
+                                            <input id="leaderName" type="text" class="form-control"
+                                                   name="leaderName" autofocus required="required"
+                                                   data-toggle="popover" data-placement="top"
+                                                   data-content="">
+                                            <span id="userNameError"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="idCard">领导者身份证号</label>
+                                            <input id="idCard" type="text" class="form-control" name="idCard"
+                                                   required="required">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="license">单证证明/营业执照</label>
+                                            <input id="license" type="file" multiple class="file"
+                                                   name="file" data-overwrite-initial="false" data-min-file-count="1">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="idCard1">身份证正面</label>
+                                            <input id="idCard1" type="file" multiple class="file"
+                                                   name="file" data-overwrite-initial="false" data-min-file-count="1">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="idCard2">身份证反面</label>
+                                            <input id="idCard2" type="file" multiple class="file"
+                                                   name="file" data-overwrite-initial="false" data-min-file-count="1">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="idCard">机构类型</label>
+                                            <input id="type" type="text" class="form-control" name="type" required="required">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="idCard">认证账号</label>
+                                            <input id="showName" type="text" class="form-control" name="showName"
+                                                   required="required">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-primary btn-block"  onclick="submitForm()">
+                                                提交申请
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div th:replace="commons/admin-bar::footer"></div>
+    </div>
+</div>
+
+
+<script src="background/modules/jquery.min.js"></script>
+<script src="background/modules/popper.js"></script>
+<script src="background/modules/tooltip.js"></script>
+<script src="background/modules/bootstrap/js/bootstrap.min.js"></script>
+<script src="background/modules/nicescroll/jquery.nicescroll.min.js"></script>
+<script src="background/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
+<script src="background/js/sa-functions.js"></script>
+
+<script src="background/modules/chart.min.js"></script>
+<script src="background/modules/summernote/summernote-lite.js"></script>
+
+<script src="background/js/scripts.js"></script>
+<script src="background/js/custom.js"></script>
+<script src="../../static/background/js/profile.js"></script>
+<script src="background/js/fileUpload.js"></script>
+<script src="background/js/fileinput.min.js"></script>
+<script src="background/js/zh.js"></script>
+<script src="background/js/certification.js"></script>
+<script>
+
+    $("#license").fileinput({
+        uploadUrl: "uploadLicenseImg?type=license",
+        maxFilesNum: 1,
+        language: 'zh',
+        maxFileCount: 1,
+        uploadAsync: true, //默认异步上传
+        showUpload: false, //是否显示上传按钮
+        showRemove: true, //显示移除按钮
+        showPreview: true, //是否显示预览
+        showCaption: false,//是否显示标题
+        allowedFileTypes: ['image'],
+        'allowedFileExtensions': ['jpg', 'png', 'jpeg', 'gif', 'bmp'],
+    }).on("filebatchuploadcomplete", function (event, data) {
+
+    }).on("filebatchselected", function (event, files) {
+        $(this).fileinput("upload");
+    }).on("fileuploaded", function (event, data) {
+        if (data.response) {
+
+        }
+    });
+    $("#idCard1").fileinput({
+        uploadUrl: "uploadLicenseImg?type=idCard1",
+        maxFilesNum: 1,
+        language: 'zh',
+        maxFileCount: 1,
+        uploadAsync: true, //默认异步上传
+        showUpload: false, //是否显示上传按钮
+        showRemove: true, //显示移除按钮
+        showPreview: true, //是否显示预览
+        showCaption: false,//是否显示标题
+        allowedFileTypes: ['image'],
+        'allowedFileExtensions': ['jpg', 'png', 'jpeg', 'gif', 'bmp'],
+    }).on("filebatchuploadcomplete", function (event, data) {
+
+    }).on("filebatchselected", function (event, files) {
+        $(this).fileinput("upload");
+    }).on("fileuploaded", function (event, data) {
+        if (data.response) {
+
+        }
+    });
+    $("#idCard2").fileinput({
+        uploadUrl: "uploadLicenseImg?type=idCard2",
+        maxFilesNum: 1,
+        language: 'zh',
+        maxFileCount: 1,
+        uploadAsync: true, //默认异步上传
+        showUpload: false, //是否显示上传按钮
+        showRemove: true, //显示移除按钮
+        showPreview: true, //是否显示预览
+        showCaption: false,//是否显示标题
+        allowedFileTypes: ['image'],
+        'allowedFileExtensions': ['jpg', 'png', 'jpeg', 'gif', 'bmp'],
+    }).on("filebatchuploadcomplete", function (event, data) {
+
+    }).on("filebatchselected", function (event, files) {
+        $(this).fileinput("upload");
+    }).on("fileuploaded", function (event, data) {
+        if (data.response) {
+
+        }
+    });
+
+
+</script>
+</body>
+
+</html>

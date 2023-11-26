@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.charity.mapper.CommentMapper">
+    <!--开启二级缓存,使用Ehcache缓存框架-->
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <!--comment的映射结果集-->
+    <resultMap type="com.charity.entity.Comment" id="CommentMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="img" column="img" jdbcType="VARCHAR"/>
+        <result property="targetId" column="target_id" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="replyId" column="reply_id" jdbcType="INTEGER"/>
+        <result property="isFirst" column="is_first" jdbcType="INTEGER"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <!--全部字段-->
+    <sql id="allColumn"> id, user_id, user_name, img, target_id, type, content, reply_id, is_first, gmt_create, gmt_modified </sql>
+    
+    <!--添加语句的字段列表-->
+    <sql id="insertColumn">
+        <if test="userId != null">
+                user_id,
+        </if>
+        <if test="userName != null and userName != ''">
+                user_name,
+        </if>
+        <if test="img != null and img != ''">
+                img,
+        </if>
+        <if test="targetId != null">
+                target_id,
+        </if>
+        <if test="type != null">
+                type,
+        </if>
+        <if test="content != null and content != ''">
+                content,
+        </if>
+        <if test="replyId != null">
+                reply_id,
+        </if>
+        <if test="isFirst != null">
+                is_first,
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create,
+        </if>
+        gmt_modified
+    </sql>
+    
+    <!--添加语句的值列表-->
+        <sql id="insertValue">
+        <if test="userId != null">
+                #{userId},
+        </if>
+        <if test="userName != null and userName != ''">
+                #{userName},
+        </if>
+        <if test="img != null and img != ''">
+                #{img},
+        </if>
+        <if test="targetId != null">
+                #{targetId},
+        </if>
+        <if test="type != null">
+                #{type},
+        </if>
+        <if test="content != null and content != ''">
+                #{content},
+        </if>
+        <if test="replyId != null">
+                #{replyId},
+        </if>
+        <if test="isFirst != null">
+                #{isFirst},
+        </if>
+        <if test="gmtCreate != null">
+                #{gmtCreate},
+        </if>
+        <if test="gmtModified != null">
+                #{gmtModified},
+        </if>
+    </sql>
+    
+    <!--通用对Comment各个属性的值的非空判断，Insert、Update使用-->
+    <sql id="commonsValue">
+        <if test="userId != null">
+                user_id = #{userId},
+        </if>
+        <if test="userName != null and userName != ''">
+                user_name = #{userName},
+        </if>
+        <if test="img != null and img != ''">
+                img = #{img},
+        </if>
+        <if test="targetId != null">
+                target_id = #{targetId},
+        </if>
+        <if test="type != null">
+                type = #{type},
+        </if>
+        <if test="content != null and content != ''">
+                content = #{content},
+        </if>
+        <if test="replyId != null">
+                reply_id = #{replyId},
+        </if>
+        <if test="isFirst != null">
+                is_first = #{isFirst},
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate},
+        </if>
+    </sql>
+    
+    <!--通用对Comment各个属性的值的非空判断,Where查询使用-->
+    <sql id="commonsQuery">
+        <if test="userId != null">
+                and user_id = #{userId}
+        </if>
+        <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+        </if>
+        <if test="img != null and img != ''">
+                and img = #{img}
+        </if>
+        <if test="targetId != null">
+                and target_id = #{targetId}
+        </if>
+        <if test="type != null">
+                and type = #{type}
+        </if>
+        <if test="content != null and content != ''">
+                and content = #{content}
+        </if>
+        <if test="replyId != null">
+                and reply_id = #{replyId}
+        </if>
+        <if test="isFirst != null">
+                and is_first = #{isFirst}
+        </if>
+        <if test="gmtCreate != null">
+                and gmt_create = #{gmtCreate}
+        </if>
+        <if test="gmtModified != null">
+                and gmt_modified = #{gmtModified}
+        </if>
+    </sql>
+    
+    <!--新增comment:哪个字段不为空就添加哪列数据,返回自增主键-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertValue"/>
+        </trim>
+    </insert>
+   
+    <!--删除comment:通过主键-->
+    <delete id="deleteById">
+        delete from comment
+        <where>
+            id = #{id}
+        </where>
+    </delete>
+
+    <!--根据目标ID和类型删除评论-->
+    <delete id="deleteByTargetIdAndType">
+        delete from comment
+        <where>
+            id = #{id} and type = #{type}
+        </where>
+    </delete>
+
+    <!--查询单个comment-->
+    <select id="getById" resultMap="CommentMap">
+        select
+        <include refid="allColumn"></include>
+        from comment
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="listComments" resultMap="CommentMap">
+        select
+          <include refid="allColumn"></include>
+        from comment
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsQuery"></include>
+        </trim>
+        order by gmt_create desc
+    </select>
+
+    <!--获取文章的评论数-->
+    <select id="countComment" resultType="java.lang.Integer">
+        select count(*) from comment where target_id = #{articleId} and type = 2
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update comment
+        <set>
+            <include refid="commonsValue"></include>
+            gmt_modified = CURRENT_TIMESTAMP()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <!--获取文章的评论数-->
+    <select id="listOneComments" resultMap="CommentMap">
+        select <include refid="allColumn"></include>
+        from comment where target_id = #{targetId} and type = #{type} and reply_id is null and is_first = 0
+    </select>
+
+    <!--获取目标的指定评论-->
+    <select id="getFirst" resultType="com.charity.entity.Comment">
+        select
+        <include refid="allColumn"></include>
+        from comment where target_id = #{id} and is_first = 1
+    </select>
+
+</mapper>

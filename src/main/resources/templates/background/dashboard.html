@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
+          name="viewport">
+    <title>仪表盘-爱慈善</title>
+    <!-- Favicon and Touch Icons -->
+    <link href="common/favicon.png" rel="shortcut icon" type="image/png">
+    <link rel="stylesheet" href="background/modules/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="background/modules/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="background/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
+
+    <link rel="stylesheet" href="background/modules/summernote/summernote-lite.css">
+    <link rel="stylesheet" href="background/modules/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="background/css/demo.css">
+    <link rel="stylesheet" href="background/css/style.css">
+    <script src="background/js/message.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <div class="main-wrapper">
+        <div class="navbar-bg"></div>
+        <div th:replace="commons/admin-bar::navbar"></div>
+        <div th:replace="commons/admin-bar::sidebar(currUri='dashboard')"></div>
+
+        <div class="main-content">
+            <section class="section">
+                <h1 class="section-header">
+                    <div><i class="ion ion-ios-speedometer"></i> 仪表盘</div>
+                </h1>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="card card-sm-3">
+                            <div class="card-icon bg-warning">
+                                <i class="ion ion-paper-airplane"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>总计发布</h4>
+                                </div>
+                                <div class="card-body">
+                                    <a th:href="@{/my-articles(checked=1)}">[[${articlesSize}]]</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="card card-sm-3">
+                            <div class="card-icon bg-danger">
+                                <i class="ion ion-chatbox-working"></i>
+                            </div>
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4>评论</h4>
+                                </div>
+                                <div class="card-body">
+                                    <a th:href="@{/my-comments}">[[${commentsSize}]]</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="card card-sm-3">
+                            <div class="card-icon" style="background-color: grey" th:if="${session.loginUser.certificationId == null}">
+                                <i class="ion ion-star"></i>
+                            </div>
+							<div class="card-icon bg-success" th:if="${session.loginUser.certificationId != null}">
+								<i class="ion ion-star"></i>
+							</div>
+                            <div class="card-wrap">
+                                <div class="card-header" th:if="${certification == null}">
+                                    <h4><a th:href="@{/certification}">前往认证</a></h4>
+                                </div>
+                                <div class="card-body " th:if="${certification == 0}">
+                                    <a>-</a>
+                                </div>
+                                <div class="card-header" th:if="${certification != null and certification.isChecked == 1}">
+                                    <h4 class="text-success">已认证</h4>
+                                </div>
+                                <div class="card-body" th:if="${certification != null and certification.isChecked == 1}">
+                                    <a>[[${certification.showName}]]</a>
+                                </div>
+                                <div class="card-header" th:if="${certification != null and certification.isChecked == 0}">
+                                    <h4 class="text-warning">等待审核</h4>
+                                </div>
+                                <div class="card-body" th:if="${certification != null and certification.isChecked == 0}">
+                                    <a>[[${certification.showName}]]</a>
+                                </div>
+                                <div class="card-header" th:if="${certification != null and certification.isChecked == 2}">
+                                    <h4 class="text-danger">认证失败</h4>
+                                </div>
+                                <div class="card-body" th:if="${certification != null and certification.isChecked == 2}">
+                                    <a>原因：[[${certification.info}]]</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="float-right">
+                                    <a th:href="@{/activities}" class="btn btn-primary" target="_blank">查看全部</a>
+                                </div>
+                                <h5>最新活动</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>标题</th>
+                                            <th>时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="activity:${activities}">
+                                            <td>
+                                                [[${activity.title}]]
+                                            </td>
+                                            <td th:text="${#dates.format(activity.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <td>
+                                                <a  title="查看" th:href="@{/activity(id=${activity.id})}"
+                                                   target="_blank" class="btn btn-sm btn-primary">
+                                                    <i class="ion-eye ion"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="float-right">
+                                    <a th:href="@{/articles}" class="btn btn-primary" target="_blank">查看全部</a>
+                                </div>
+                                <h5>最新求助文章</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>标题</th>
+                                            <th>时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="article:${articles}">
+                                            <td>
+                                                [[${article.title}]]
+                                            </td>
+                                            <td th:text="${#dates.format(article.gmtCreate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                                            <td>
+                                                <a  title="查看" th:href="@{/article(id=${article.id})}"
+                                                    target="_blank" class="btn btn-sm btn-primary">
+                                                    <i class="ion-eye ion"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+        <div th:replace="commons/admin-bar::footer"></div>
+    </div>
+</div>
+
+<script src="background/modules/jquery.min.js"></script>
+<script src="background/modules/popper.js"></script>
+<script src="background/modules/tooltip.js"></script>
+<script src="background/modules/bootstrap/js/bootstrap.min.js"></script>
+<script src="background/modules/nicescroll/jquery.nicescroll.min.js"></script>
+<script src="background/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
+<script src="background/js/sa-functions.js"></script>
+
+<script src="background/modules/chart.min.js"></script>
+<script src="background/modules/summernote/summernote-lite.js"></script>
+
+<script src="background/js/scripts.js"></script>
+<script src="background/js/custom.js"></script>
+<script src="background/js/message.js"></script>
+</body>
+</html>

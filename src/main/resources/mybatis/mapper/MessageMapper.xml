@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.charity.mapper.MessageMapper">
+    <!--开启二级缓存,使用Ehcache缓存框架-->
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <!--message的映射结果集-->
+    <resultMap type="com.charity.entity.Message" id="MessageMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="receiveUserId" column="receive_user_id" jdbcType="INTEGER"/>
+        <result property="sentUserId" column="sent_user_id" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="targetId" column="target_id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="isRead" column="is_read" jdbcType="INTEGER"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+        <result property="sentUserImg" column="sent_user_img" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--全部字段-->
+    <sql id="allColumn"> id, receive_user_id, sent_user_id, type, target_id, title, content, is_read, gmt_create, gmt_modified,sent_user_img</sql>
+
+    <!--添加语句的字段列表-->
+    <sql id="insertColumn">
+        <if test="receiveUserId != null">
+            receive_user_id,
+        </if>
+        <if test="sentUserId != null">
+            sent_user_id,
+        </if>
+        <if test="type != null">
+            type,
+        </if>
+        <if test="targetId != null">
+            target_id,
+        </if>
+        <if test="title != null and title != ''">
+            title,
+        </if>
+        <if test="content != null and content != ''">
+            content,
+        </if>
+        <if test="isRead != null">
+            is_read,
+        </if>
+        <if test="gmtCreate != null">
+            gmt_create,
+        </if>
+        <if test="sentUserImg != null">
+            sent_user_img,
+        </if>
+        gmt_modified
+    </sql>
+
+    <!--添加语句的值列表-->
+    <sql id="insertValue">
+        <if test="receiveUserId != null">
+            #{receiveUserId},
+        </if>
+        <if test="sentUserId != null">
+            #{sentUserId},
+        </if>
+        <if test="type != null">
+            #{type},
+        </if>
+        <if test="targetId != null">
+            #{targetId},
+        </if>
+        <if test="title != null and title != ''">
+            #{title},
+        </if>
+        <if test="content != null and content != ''">
+            #{content},
+        </if>
+        <if test="isRead != null">
+            #{isRead},
+        </if>
+        <if test="gmtCreate != null">
+            #{gmtCreate},
+        </if>
+        <if test="sentUserImg != null">
+            #{sentUserImg},
+        </if>
+        CURRENT_TIMESTAMP()
+    </sql>
+
+    <!--通用对Message各个属性的值的非空判断，Insert、Update使用-->
+    <sql id="commonsValue">
+        <if test="receiveUserId != null">
+            receive_user_id = #{receiveUserId},
+        </if>
+        <if test="sentUserId != null">
+            sent_user_id = #{sentUserId},
+        </if>
+        <if test="type != null">
+            type = #{type},
+        </if>
+        <if test="targetId != null">
+            target_id = #{targetId},
+        </if>
+        <if test="title != null and title != ''">
+            title = #{title},
+        </if>
+        <if test="content != null and content != ''">
+            content = #{content},
+        </if>
+        <if test="isRead != null">
+            is_read = #{isRead},
+        </if>
+        <if test="gmtCreate != null">
+            gmt_create = #{gmtCreate},
+        </if>
+        <if test="sentUserImg != null">
+            sent_user_img = #{sentUserImg},
+        </if>
+    </sql>
+
+    <!--通用对Message各个属性的值的非空判断,Where查询使用-->
+    <sql id="commonsQuery">
+        <if test="receiveUserId != null">
+            and receive_user_id = #{receiveUserId}
+        </if>
+        <if test="sentUserId != null">
+            and sent_user_id = #{sentUserId}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        <if test="targetId != null">
+            and target_id = #{targetId}
+        </if>
+        <if test="title != null and title != ''">
+            and title = #{title}
+        </if>
+        <if test="content != null and content != ''">
+            and content = #{content}
+        </if>
+        <if test="isRead != null">
+            and is_read = #{isRead}
+        </if>
+        <if test="gmtCreate != null">
+            and gmt_create = #{gmtCreate}
+        </if>
+        <if test="gmtModified != null">
+            and gmt_modified = #{gmtModified}
+        </if>
+        <if test="sentUserImg != null">
+            and sent_user_img = #{sentUserImg}
+        </if>
+    </sql>
+
+    <!--新增message:哪个字段不为空就添加哪列数据,返回自增主键-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertValue"/>
+        </trim>
+    </insert>
+
+    <!--删除message:通过主键-->
+    <delete id="deleteById">
+        delete from message
+        <where>
+            id = #{id}
+        </where>
+    </delete>
+
+    <!--查询单个message-->
+    <select id="getById" resultMap="MessageMap">
+        select
+        <include refid="allColumn"></include>
+        from message
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="listMessages" resultMap="MessageMap">
+        select
+        <include refid="allColumn"></include>
+        from message
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsQuery"></include>
+        </trim>
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update message
+        <set>
+            <include refid="commonsValue"></include>
+            gmt_modified = CURRENT_TIMESTAMP()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <delete id="deleteAllByUserId">
+        delete from message
+        <where>
+            receive_user_id = #{id}
+        </where>
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Meta Tags -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <meta name="description" content="Oellfare - Charity Template">
+        <meta name="author" content="">
+
+        <!-- Page Title -->
+        <title>爱慈善公益-留言板</title>
+
+        <!-- Favicon and Touch Icons -->
+        <link href="front/images/logo.jpg" rel="shortcut icon" type="image/png">
+
+        <!-- Lead Style -->
+        <link href="front/css/style.css" rel="stylesheet" type="text/css">
+
+    </head>
+    <!--PreLoader-->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="siteloading-preloader"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+    <body>
+        <div th:replace="commons/front-bar::#header(currUri='board',links=${links})"></div>
+
+        <div class="main-wrapper">
+
+            <div class="section contact">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4" style="overflow-y: scroll;height: 500px">
+
+                            <div class="power_iconbox" th:each="message:${messages}">
+                                <div class="power_iconbox_content">
+                                    <h6 th:text="${message.name}"></h6>
+                                    <p style="padding:5px 0px" th:text="${message.content}"></p>
+                                    <div style="font-size: 12px;text-align: right;width: 100%" th:text="${#dates.format(message.gmtCreate,'yyyy年MM月dd日 HH:mm:ss')}"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="contact_form">
+                                <div class="contact_form_heading_wrapper">
+                                    <h1 class="contact_form_title ">留言送祝福</h1>
+                                    <p>
+                                        留下你的赠言！送给那些需要鼓励的孩子吧！
+                                    </p>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="昵称">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="邮箱地址">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <textarea id="content" name="message" class="form-control" placeholder="在此处填写留言内容..."></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="power_button_group">
+                                            <input class="power_button effect_1" type="submit" value="发表" onclick="publishMessage()">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="commons/front-bar::#footer"></div>
+
+         <!-- All JavaScript Files
+        ================================================== -->
+
+        <script src="common/js/jquery.min.js"></script>
+        <script src="common/js/board.js"></script>
+        <script src="front/js/bootstrap.min.js"></script>
+        <script src="front/js/menu.js"></script>
+        <script src="front/js/select2.js"></script>
+        <script src="front/js/jquery.fancybox.min.js"></script>
+        <script src="front/js/owl.carousel.min.js"></script>
+        <script src="front/js/spectragram.min.js"></script>
+        <script src="front/js/wow.js"></script>
+        <script src="front/js/custom.js"></script>
+
+    </body>
+</html>

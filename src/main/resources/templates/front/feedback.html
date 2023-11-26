@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta name="description" content="Oellfare - Charity Template">
+    <meta name="author" content="">
+
+    <!-- Page Title -->
+    <title>爱慈善公益-反馈信息</title>
+
+    <!-- Favicon and Touch Icons -->
+    <link href="front/images/logo.jpg" rel="shortcut icon" type="image/png">
+
+    <!-- Lead Style -->
+    <link href="front/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+<!--PreLoader-->
+<div class="preloader">
+    <div class="preloader-inner">
+        <div class="siteloading-preloader"></div>
+    </div>
+</div>
+<!--PreLoader Ends-->
+<body>
+<div th:replace="commons/front-bar::#header(links=${links})"></div>
+
+<div class="main-wrapper">
+
+    <div class="section contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="contact_form">
+                        <div class="contact_form_heading_wrapper">
+                            <h1 class="contact_form_title ">反馈信息</h1>
+                            <p>
+                                留下你的反馈，让我们一起更好的帮助他人
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <textarea id="content" name="message" class="form-control" placeholder="在此处填写反馈内容..."></textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="power_button_group">
+                                    <input class="power_button effect_1" type="submit" value="提交" onclick="publishFeedback()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="commons/front-bar::#footer"></div>
+
+<!-- All JavaScript Files
+================================================== -->
+<script>
+    function publishFeedback() {
+        let content = $("#content").val().trim();
+        if (content == ''){
+            alert("请输入反馈内容");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "publishFeedback",
+            data: {content:content},
+            dataType: "json",
+            success: function(data){
+                if (data['code']== 200){
+                    alert("您的反馈我们已经收到！");
+                    $("#content").val("");
+                    window.location.reload();
+                }else {
+                    alert("服务器发生了一个错误");
+                }
+            }
+        });
+    }
+
+</script>
+
+<script src="common/js/jquery.min.js"></script>
+<script src="common/js/board.js"></script>
+<script src="front/js/bootstrap.min.js"></script>
+<script src="front/js/menu.js"></script>
+<script src="front/js/select2.js"></script>
+<script src="front/js/jquery.fancybox.min.js"></script>
+<script src="front/js/owl.carousel.min.js"></script>
+<script src="front/js/spectragram.min.js"></script>
+<script src="front/js/wow.js"></script>
+<script src="front/js/custom.js"></script>
+
+</body>
+</html>

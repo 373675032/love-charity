@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.charity.mapper.CertificationMapper">
+    <!--开启二级缓存,使用Ehcache缓存框架-->
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <!--certification的映射结果集-->
+    <resultMap type="com.charity.entity.Certification" id="CertificationMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="leaderName" column="leader_name" jdbcType="VARCHAR"/>
+        <result property="idCard" column="id_card" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="showName" column="show_name" jdbcType="VARCHAR"/>
+        <result property="proveImg" column="prove_img" jdbcType="VARCHAR"/>
+        <result property="idCardImg0" column="id_card_img0" jdbcType="VARCHAR"/>
+        <result property="idCardImg1" column="id_card_img1" jdbcType="VARCHAR"/>
+        <result property="isChecked" column="is_checked" jdbcType="INTEGER"/>
+        <result property="info" column="info" jdbcType="VARCHAR"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <!--全部字段-->
+    <sql id="allColumn"> id, user_id, name, leader_name, id_card, type, show_name, prove_img, id_card_img0, id_card_img1, is_checked, info, gmt_create, gmt_modified </sql>
+    
+    <!--添加语句的字段列表-->
+    <sql id="insertColumn">
+        <if test="userId != null and userId != ''">
+                user_id,
+        </if>
+        <if test="name != null and name != ''">
+                name,
+        </if>
+        <if test="leaderName != null and leaderName != ''">
+                leader_name,
+        </if>
+        <if test="idCard != null and idCard != ''">
+                id_card,
+        </if>
+        <if test="type != null and type != ''">
+                type,
+        </if>
+        <if test="showName != null and showName != ''">
+                show_name,
+        </if>
+        <if test="proveImg != null and proveImg != ''">
+                prove_img,
+        </if>
+        <if test="idCardImg0 != null and idCardImg0 != ''">
+                id_card_img0,
+        </if>
+        <if test="idCardImg1 != null and idCardImg1 != ''">
+                id_card_img1,
+        </if>
+        <if test="isChecked != null">
+                is_checked,
+        </if>
+        <if test="info != null and info != ''">
+                info,
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create,
+        </if>
+    </sql>
+    
+    <!--添加语句的值列表-->
+        <sql id="insertValue">
+            <if test="userId != null and userId != ''">
+                #{userId},
+            </if>
+        <if test="name != null and name != ''">
+                #{name},
+        </if>
+        <if test="leaderName != null and leaderName != ''">
+                #{leaderName},
+        </if>
+        <if test="idCard != null and idCard != ''">
+                #{idCard},
+        </if>
+        <if test="type != null and type != ''">
+                #{type},
+        </if>
+        <if test="showName != null and showName != ''">
+                #{showName},
+        </if>
+        <if test="proveImg != null and proveImg != ''">
+                #{proveImg},
+        </if>
+        <if test="idCardImg0 != null and idCardImg0 != ''">
+                #{idCardImg0},
+        </if>
+        <if test="idCardImg1 != null and idCardImg1 != ''">
+                #{idCardImg1},
+        </if>
+        <if test="isChecked != null">
+                #{isChecked},
+        </if>
+        <if test="info != null and info != ''">
+                #{info},
+        </if>
+        <if test="gmtCreate != null">
+                #{gmtCreate},
+        </if>
+    </sql>
+    
+    <!--通用对Certification各个属性的值的非空判断，Insert、Update使用-->
+    <sql id="commonsValue">
+        <if test="userId != null and userId != ''">
+            user_id = #{userId},
+        </if>
+        <if test="name != null and name != ''">
+                name = #{name},
+        </if>
+        <if test="leaderName != null and leaderName != ''">
+                leader_name = #{leaderName},
+        </if>
+        <if test="idCard != null and idCard != ''">
+                id_card = #{idCard},
+        </if>
+        <if test="type != null and type != ''">
+                type = #{type},
+        </if>
+        <if test="showName != null and showName != ''">
+                show_name = #{showName},
+        </if>
+        <if test="proveImg != null and proveImg != ''">
+                prove_img = #{proveImg},
+        </if>
+        <if test="idCardImg0 != null and idCardImg0 != ''">
+                id_card_img0 = #{idCardImg0},
+        </if>
+        <if test="idCardImg1 != null and idCardImg1 != ''">
+                id_card_img1 = #{idCardImg1},
+        </if>
+        <if test="isChecked != null">
+                is_checked = #{isChecked},
+        </if>
+        <if test="info != null and info != ''">
+                info = #{info},
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate},
+        </if>
+    </sql>
+    
+    <!--通用对Certification各个属性的值的非空判断,Where查询使用-->
+    <sql id="commonsQuery">
+        <if test="userId != null and userId != ''">
+                and user_id = #{userId},
+        </if>
+        <if test="name != null and name != ''">
+                and name = #{name}
+        </if>
+        <if test="leaderName != null and leaderName != ''">
+                and leader_name = #{leaderName}
+        </if>
+        <if test="idCard != null and idCard != ''">
+                and id_card = #{idCard}
+        </if>
+        <if test="type != null and type != ''">
+                and type = #{type}
+        </if>
+        <if test="showName != null and showName != ''">
+                and show_name = #{showName}
+        </if>
+        <if test="proveImg != null and proveImg != ''">
+                and prove_img = #{proveImg}
+        </if>
+        <if test="idCardImg0 != null and idCardImg0 != ''">
+                and id_card_img0 = #{idCardImg0}
+        </if>
+        <if test="idCardImg1 != null and idCardImg1 != ''">
+                and id_card_img1 = #{idCardImg1}
+        </if>
+        <if test="isChecked != null">
+                and is_checked = #{isChecked}
+        </if>
+        <if test="info != null and info != ''">
+                and info = #{info}
+        </if>
+        <if test="gmtCreate != null">
+                and gmt_create = #{gmtCreate}
+        </if>
+        <if test="gmtModified != null">
+                and gmt_modified = #{gmtModified}
+        </if>
+    </sql>
+    
+    <!--新增certification:哪个字段不为空就添加哪列数据,返回自增主键-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into certification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertValue"/>
+        </trim>
+    </insert>
+   
+    <!--删除certification:通过主键-->
+    <delete id="deleteById">
+        delete from certification
+        <where>
+            id = #{id}
+        </where>
+    </delete>
+    
+    <!--查询单个certification-->
+    <select id="getById" resultMap="CertificationMap">
+        select
+        <include refid="allColumn"></include>
+        from certification
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <!--查询单个certification-->
+    <select id="getByUserId" resultMap="CertificationMap">
+        select
+        <include refid="allColumn"></include>
+        from certification
+        <where>
+            user_id = #{id}
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="listCertifications" resultMap="CertificationMap">
+        select
+          <include refid="allColumn"></include>
+        from certification
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsQuery"></include>
+        </trim>
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update certification
+        <set>
+            <include refid="commonsValue"></include>
+            gmt_modified = CURRENT_TIMESTAMP()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+</mapper>

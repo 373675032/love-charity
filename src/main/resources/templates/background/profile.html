@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
+          name="viewport">
+    <title>我的资料-爱慈善</title>
+    <!-- Favicon and Touch Icons -->
+    <link href="common/favicon.png" rel="shortcut icon" type="image/png">
+    <link rel="stylesheet" href="background/modules/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="background/modules/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="background/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
+
+    <link rel="stylesheet" href="background/modules/summernote/summernote-lite.css">
+    <link rel="stylesheet" href="background/modules/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="background/css/demo.css">
+    <link rel="stylesheet" href="background/css/style.css">
+    <link rel="stylesheet" href="background/css/common.css"/>
+    <link rel="stylesheet" href="background/css/xtiper.css"/>
+    <link rel="stylesheet" href="background/css/bootstrap-datetimepicker.min.css"/>
+    <script src="background/js/message.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <div class="main-wrapper">
+        <div class="navbar-bg"></div>
+        <div th:replace="commons/admin-bar::navbar"></div>
+        <div th:replace="commons/admin-bar::sidebar(currUri='profile')"></div>
+
+        <div class="main-content">
+            <section class="section">
+                <h1 class="section-header">
+                    <div><i class="ion ion-android-person"></i> 我的资料</div>
+                </h1>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <a th:if="${session.loginUser.certificationId == null}" href="certification" class="btn btn-primary btn-sm">前往认证</a>
+                                <a th:if="${certification !=null && certification.isChecked == 2}" href="certification" class="btn btn-danger btn-sm">修改认证</a>
+                                <div class="float-right">
+                                    <a href="password" class="btn btn-danger btn-sm">修改密码</a>
+                                    <button class="btn btn-success btn-sm" onclick="clickUpload()">修改头像</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="form-group col-4">
+                                        <label for="name">用户名</label>
+                                        <input id="name" type="text" class="form-control"
+                                               th:value="${session.loginUser.name}">
+                                    </div>
+                                    <div class="form-group col-1 offset-6">
+                                        <img alt="image" class="img-thumbnail" style="max-width:100px; height:100px;"
+                                             th:src="${session.loginUser.img}" id="userImg"/>
+                                        <input id="file" type="file" style="display: none"
+                                               class="form-control"
+                                               onchange="uploadUserImg()">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-4">
+                                        <label for="phone" class="d-block">手机号</label>
+                                        <input id="phone" type="text" class="form-control"
+                                               th:value="${session.loginUser.phone}">
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label for="oldEmail">邮箱</label>
+                                        <input id="newEmail" type="text" class="form-control"
+                                               th:value="${session.loginUser.email}" onblur="checkUserEmail()">
+                                        <input id="oldEmail" type="text" class="form-control"
+                                               th:value="${session.loginUser.email}" style="display: none">
+                                        <span id="userEmailError"></span>
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label for="code" class="d-block">邮箱验证码</label>
+                                        <input id="code" type="text" class="form-control" autocomplete="off">
+                                    </div>
+                                    <div class="form-group col-2">
+                                        <label for="emailCode" class="d-block">-</label>
+                                        <input type="button" class="btn btn-secondary" value="获取邮箱验证码" id="emailCode"
+                                               disabled="disabled">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-4">
+                                        <label>职业</label>
+                                        <input type="text" class="form-control" name="career" id="career"
+                                               th:value="${session.loginUser.career}">
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label>我的认证</label>
+                                        <span class="form-control" th:if="${session.loginUser.certificationId == null}">未认证</span>
+                                        <span class="form-control text-danger" th:if="${certification !=null && certification.isChecked == 2}" >审核未通过</span>
+                                        <span class="form-control text-success" th:if="${certification !=null && certification.isChecked == 1}" >[[${certification.name}]]</span>
+                                        <span class="form-control text-warning" th:if="${certification !=null &&  certification.isChecked == 0}">正在审核</span>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label>性别</label>
+                                        <select class="form-control" name="sex" id="sex">
+                                            <option value="1" th:selected="${session.loginUser.sex == 1}">男</option>
+                                            <option value="0" th:selected="${session.loginUser.sex == 0}">女</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>地址</label>
+                                    <div class="form-control">
+                                        <input type="text" class="form-control" th:value="${province} +'-'+ ${city} +'-'+ ${area}">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-4">
+                                        <label for="input_province" class="d-block">(地址)省</label>
+                                        <select name="input_province" id="input_province" class="form-control">
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label for="input_city" class="d-block">市</label>
+                                        <select name="input_city" id="input_city" class="form-control">
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-4">
+                                        <label for="input_area" class="d-block">区</label>
+                                        <select name="input_area" id="input_area" class="form-control">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>出生年月</label>
+                                    <div class="form-control">
+                                        <input type="text" class="form-control" id="data" name="bornDate"
+                                               th:value="${#dates.format(session.loginUser.birthday, 'yyyy-MM-dd')}">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary btn-block" onclick="submitUserInfo()">
+                                        提交修改
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div th:replace="commons/admin-bar::footer"></div>
+    </div>
+</div>
+
+<script src="background/modules/jquery.min.js"></script>
+<script src="background/modules/popper.js"></script>
+<script src="background/modules/tooltip.js"></script>
+<script src="background/modules/bootstrap/js/bootstrap.min.js"></script>
+<script src="background/modules/nicescroll/jquery.nicescroll.min.js"></script>
+<script src="background/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
+<script src="background/js/sa-functions.js"></script>
+
+<script src="background/modules/chart.min.js"></script>
+<script src="background/modules/summernote/summernote-lite.js"></script>
+
+<script src="background/js/scripts.js"></script>
+<script src="background/js/custom.js"></script>
+<script src="background/js/xtiper.min.js"></script>
+<script src="background/js/profile.js"></script>
+<script src="background/js/fileUpload.js"></script>
+<script src="background/js/address.js"></script>
+<script src="background/js/bootstrap-datetimepicker.min.js"></script>
+<script src="background/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script>
+
+    //时间选择器
+    $("#data").datetimepicker({
+        //format : 'yyyy-mm-dd hh:ii:ss',//日期格式
+        format: 'yyyy-mm-dd',
+        minView: 'month',
+        language: 'zh-CN',
+        autoclose: true,
+    }).on("click", function () {
+        $("#data").datetimepicker($("#data").val())
+    });
+
+    $(function () {
+        var html = "";
+        $("#input_city").append(html);
+        $("#input_area").append(html);
+        $.each(pdata, function (idx, item) {
+            if (parseInt(item.level) == 0) {
+                html += "<option value=" + item.code + " >" + item.names + "</option> ";
+            }
+        });
+        $("#input_province").append(html);
+
+        $("#input_province").change(function () {
+            if ($(this).val() == "") return;
+            $("#input_city option").remove();
+            $("#input_area option").remove();
+            //var code = $(this).find("option:selected").attr("exid");
+            var code = $(this).find("option:selected").val();
+            code = code.substring(0, 2);
+            var html = "<option value=''></option>";
+            $("#input_area option").append(html);
+            $.each(pdata, function (idx, item) {
+                if (parseInt(item.level) == 1 && code == item.code.substring(0, 2)) {
+                    html += "<option value=" + item.code + " >" + item.names + "</option> ";
+                }
+            });
+            $("#input_city ").append(html);
+
+
+        });
+
+        $("#input_city").change(function () {
+            if ($(this).val() == "") return;
+            $("#input_area option").remove();
+            var code = $(this).find("option:selected").val();
+            code = code.substring(0, 4);
+            var html = "<option value=''></option>";
+            $.each(pdata, function (idx, item) {
+                if (parseInt(item.level) == 2 && code == item.code.substring(0, 4)) {
+                    html += "<option value=" + item.code + " >" + item.names + "</option> ";
+                }
+            });
+            $("#input_area ").append(html);
+
+        });
+
+    });
+    //发送验证码只邮箱
+    var vercode = 0;
+    var time = 60;
+    var flag = true;   //设置点击标记，防止60内再次点击生效
+
+    //发送验证码
+    $('#emailCode').click(function () {
+        if ($("#oldEmail").val() == "") {
+            return;
+        }
+        $(this).attr("disabled", true);
+        var userName = $("input[name='name']").val();
+        var email = $("#newEmail").val();
+        if (flag) {
+            var timer = setInterval(function () {
+                if (time == 60 && flag) {
+                    flag = false;
+                    $.ajax({
+                        type: 'post',
+                        async: true,
+                        url: 'sendCode',
+                        data: {
+                            "name": userName,
+                            "email": email,
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if(data.code == 500){
+                                alert("验证码发送失败!");
+                            }
+                        }
+                    });
+                } else if (time == 0) {
+                    $("#emailCode").removeAttr("disabled");
+                    $("#emailCode").val("免费获取验证码");
+                    clearInterval(timer);
+                    time = 60;
+                    flag = true;
+                } else {
+                    $("#emailCode").val(time + " s 重新发送");
+                    time--;
+                }
+            }, 1000);
+        }
+    });
+</script>
+</body>
+</html>

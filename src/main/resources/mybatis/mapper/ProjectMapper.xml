@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.charity.mapper.ProjectMapper">
+    <!--开启二级缓存,使用Ehcache缓存框架-->
+    <!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <!--project的映射结果集-->
+    <resultMap type="com.charity.entity.Project" id="ProjectMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="background" column="background" jdbcType="VARCHAR"/>
+        <result property="target" column="target" jdbcType="VARCHAR"/>
+        <result property="theme" column="theme" jdbcType="VARCHAR"/>
+        <result property="sponsor" column="sponsor" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <!--全部字段-->
+    <sql id="allColumn"> id, name, background, target, theme, sponsor, content, img, gmt_create, gmt_modified </sql>
+
+    <!--添加语句的字段列表-->
+    <sql id="insertColumn">
+        <if test="name != null and name != ''">
+                name,
+        </if>
+        <if test="background != null and background != ''">
+                background,
+        </if>
+        <if test="target != null and target != ''">
+                target,
+        </if>
+        <if test="theme != null and theme != ''">
+                theme,
+        </if>
+        <if test="sponsor != null and sponsor != ''">
+                sponsor,
+        </if>
+        <if test="content != null and content != ''">
+                content,
+        </if>
+        <if test="img != null and img != ''">
+            img,
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create,
+        </if>
+        gmt_modified
+    </sql>
+    
+    <!--添加语句的值列表-->
+        <sql id="insertValue">
+        <if test="name != null and name != ''">
+                #{name},
+        </if>
+        <if test="background != null and background != ''">
+                #{background},
+        </if>
+        <if test="target != null and target != ''">
+                #{target},
+        </if>
+        <if test="theme != null and theme != ''">
+                #{theme},
+        </if>
+        <if test="sponsor != null and sponsor != ''">
+                #{sponsor},
+        </if>
+        <if test="content != null and content != ''">
+                #{content},
+        </if>
+        <if test="img != null and img != ''">
+                #{img},
+        </if>
+        <if test="gmtCreate != null">
+                #{gmtCreate},
+        </if>
+        <if test="gmtModified != null">
+                #{gmtModified},
+        </if>
+    </sql>
+    
+    <!--通用对Project各个属性的值的非空判断，Insert、Update使用-->
+    <sql id="commonsValue">
+        <if test="name != null and name != ''">
+                name = #{name},
+        </if>
+        <if test="background != null and background != ''">
+                background = #{background},
+        </if>
+        <if test="target != null and target != ''">
+                target = #{target},
+        </if>
+        <if test="theme != null and theme != ''">
+                theme = #{theme},
+        </if>
+        <if test="sponsor != null and sponsor != ''">
+                sponsor = #{sponsor},
+        </if>
+        <if test="content != null and content != ''">
+                content = #{content},
+        </if>
+        <if test="img != null and img != ''">
+                img = #{img},
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate},
+        </if>
+    </sql>
+    
+    <!--通用对Project各个属性的值的非空判断,Where查询使用-->
+    <sql id="commonsQuery">
+        <if test="name != null and name != ''">
+                and name = #{name}
+        </if>
+        <if test="background != null and background != ''">
+                and background = #{background}
+        </if>
+        <if test="target != null and target != ''">
+                and target = #{target}
+        </if>
+        <if test="theme != null and theme != ''">
+                and theme = #{theme}
+        </if>
+        <if test="sponsor != null and sponsor != ''">
+                and sponsor = #{sponsor}
+        </if>
+        <if test="content != null and content != ''">
+                and content = #{content}
+        </if>
+        <if test="img != null and img != ''">
+                and img = #{img}
+        </if>
+        <if test="gmtCreate != null">
+                and gmt_create = #{gmtCreate}
+        </if>
+        <if test="gmtModified != null">
+                and gmt_modified = #{gmtModified}
+        </if>
+    </sql>
+    
+    <!--新增project:哪个字段不为空就添加哪列数据,返回自增主键-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertValue"/>
+        </trim>
+    </insert>
+   
+    <!--删除project:通过主键-->
+    <delete id="deleteById">
+        delete from project
+        <where>
+            id = #{id}
+        </where>
+    </delete>
+    
+    <!--查询单个project-->
+    <select id="getById" resultMap="ProjectMap">
+        select
+        <include refid="allColumn"></include>
+        from project
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="listProjects" resultMap="ProjectMap">
+        select
+          <include refid="allColumn"></include>
+        from project
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsQuery"></include>
+        </trim>
+        order by gmt_create desc
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update project
+        <set>
+            <include refid="commonsValue"></include>
+            gmt_modified = CURRENT_TIMESTAMP()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+</mapper>

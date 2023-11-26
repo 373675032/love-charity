@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg main-navbar" th:fragment="navbar">
+    <form class="form-inline mr-auto">
+        <ul class="navbar-nav mr-3">
+        </ul>
+    </form>
+    <ul class="navbar-nav navbar-right">
+        <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown"
+                                                     th:class="${session.messages.size() == 0 ? 'nav-link notification-toggle nav-link-lg':'nav-link notification-toggle nav-link-lg beep'}"
+                                                     th:if="${session.loginUser.role == 0}"><i
+                class="ion ion-ios-bell-outline"></i></a>
+            <div class="dropdown-menu dropdown-list dropdown-menu-right">
+                <div class="dropdown-header">通知
+                    <div class="float-right">
+                        <a href="javascript:void(0);" th:onclick="delAllMessage([[${session.loginUser.id}]])">全部设为已读</a>
+                    </div>
+                </div>
+                <div class="dropdown-list-content">
+                    <a class="dropdown-item dropdown-item-unread" th:each="message:${session.messages}">
+                        <a target="_blank" class="dropdown-item dropdown-item-unread"
+                           th:if="${message.message.type == 2}"
+                           th:href="@{/article(id=${message.message.targetId})}">
+                            <img alt="image" th:src="${message.message.sentUserImg}"
+                                 class="rounded-circle dropdown-item-img">
+                            <div class="dropdown-item-desc" th:utext="${message.message.content}">
+                                <div class="time">[[${message.message.gmtCreate}]]</div>
+                            </div>
+                        </a>
+                        <a target="_blank" class="dropdown-item dropdown-item-unread"
+                           th:if="${message.message.type == 1}"
+                           th:href="@{/project(id=${message.message.targetId})}">
+                            <img alt="image" th:src="${message.message.sentUserImg}"
+                                 class="rounded-circle dropdown-item-img">
+                            <div class="dropdown-item-desc" th:utext="${message.message.content}">
+                                <div class="time">[[${message.message.gmtCreate}]]</div>
+                            </div>
+                        </a>
+                        <a target="_blank" class="dropdown-item dropdown-item-unread"
+                           th:if="${message.message.type == 3}"
+                           th:href="@{/profile}">
+                            <img alt="image" th:src="${message.message.sentUserImg}"
+                                 class="rounded-circle dropdown-item-img">
+                            <div class="dropdown-item-desc" th:utext="${message.message.content}">
+                                <div class="time">[[${message.message.gmtCreate}]]</div>
+                            </div>
+                        </a>
+                    </a>
+                </div>
+            </div>
+        </li>
+        <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg">
+            <i class="ion ion-android-person d-lg-none"></i>
+            <div class="d-sm-none d-lg-inline-block">你好，[[${session.loginUser.name}]]</div>
+        </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a href="index" class="dropdown-item has-icon" target="_blank">
+                    <i class="ion ion-flag"></i> 主页
+                </a>
+                <a href="profile" class="dropdown-item has-icon">
+                    <i class="ion ion-android-person"></i> 我的资料
+                </a>
+                <a href="logout" class="dropdown-item has-icon">
+                    <i class="ion ion-log-out"></i> 退出登录
+                </a>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<div class="main-sidebar" th:fragment="sidebar">
+    <aside id="sidebar-wrapper">
+        <div class="sidebar-brand">
+            <a href="index">后台管理</a>
+        </div>
+        <div class="sidebar-user">
+            <div class="sidebar-user-picture">
+                <a href="profile"><img style="width: 50px;height: 50px" alt="image" th:src="${session.loginUser.img}"></a>
+            </div>
+            <div class="sidebar-user-details">
+                <div class="user-name" th:text="${session.loginUser.name}">莫提</div>
+                <div class="user-role">
+                    <span th:if="${session.loginUser.role == 0}">普通用户</span>
+                    <span th:if="${session.loginUser.role == 1}">管理员</span>
+                </div>
+            </div>
+        </div>
+        <ul class="sidebar-menu">
+            <li th:if="${session.loginUser.role == 0}" class="menu-header">仪表盘</li>
+            <li th:if="${session.loginUser.role == 0}" th:class="${currUri=='dashboard'?'active':''}">
+                <a href="dashboard"><i class="ion ion-ios-speedometer"></i><span>仪表盘</span></a>
+            </li>
+
+            <li th:if="${session.loginUser.role == 1}" class="menu-header">用户</li>
+            <li th:if="${session.loginUser.role == 1}" th:class="${currUri=='admin-user'?'active':''}">
+                <a href="admin-user"><i class="ion ion-person-stalker"></i> 用户管理</a>
+            </li>
+            <li th:if="${session.loginUser.role == 1}" th:class="${currUri=='certificate' ?'active':''}">
+                <a href="admin-certification"><i class="ion ion-bookmark"></i><span>用户认证</span> <div class="badge badge-danger" th:if="${session.waitUser > 0}" th:text="${session.waitUser}"></div></a>
+            </li>
+
+            <li th:if="${session.loginUser.role == 1}" class="menu-header"> 活动 / 公益项目 / 文章</li>
+            <li th:if="${session.loginUser.role == 1}" th:class="${currUri=='my-activity' ?'active':''}">
+                <a href="admin-activity"><i class="ion ion-flag"></i><span>平台活动</span></a>
+            </li>
+
+            <li th:if="${session.loginUser.role == 1}"
+                th:class="${currUri=='my-project' || currUri=='new-project' ?'active':''}">
+                <a href="admin-project"><i class="ion ion-heart"></i><span>公益项目</span></a>
+            </li>
+
+            <li th:if="${session.loginUser.role == 1}" th:class="${currUri=='project-comment'?'active':''}">
+                <a href="admin-project-comment"><i class="ion ion-chatbubbles"></i><span>项目评论管理</span></a>
+            </li>
+
+            <li th:if="${session.loginUser.role == 1}" th:class="${currUri=='activity-comment'?'active':''}">
+                <a href="admin-activity-comment"><i class="ion ion-chatbubbles"></i><span>活动评论管理</span></a>
+            </li>
+
+            <li th:if="${session.loginUser.role == 1}" th:class="${currUri=='check-article' && checked==0?'active':''}">
+                <a href="admin-article?checked=0"><i class="ion ion-information-circled"></i> 文章审核 <div class="badge badge-danger" th:if="${session.waitCount > 0}" th:text="${session.waitCount}"></div></a></li>
+
+            <li class="menu-header" th:if="${session.loginUser.role == 0}">文章</li>
+
+            <li th:if="${session.loginUser.role == 0}" th:class="${checked==1?'active':''}">
+                <a href="my-articles?checked=1"><i class="ion ion-checkmark-circled"></i> 我的发布</a>
+            </li>
+
+            <li th:if="${session.loginUser.role == 0}" th:class="${checked==0?'active':''}">
+                <a href="my-articles?checked=0"><i class="ion ion-information-circled"></i> 等待审核</a>
+            </li>
+
+            <li th:if="${session.loginUser.role == 0}" th:class="${checked==2?'active':''}">
+                <a href="my-articles?checked=2"><i class="ion ion-close-circled"></i> 未通过审核 <div class="badge badge-danger" th:if="${session.noPassCount > 0}" th:text="${session.noPassCount}"></div></a>
+            </li>
+
+            <li th:if="${session.loginUser.role == 0}" th:class="${currUri=='tarsh-article'?'active':''}">
+                <a href="trash-article"><i class="ion ion-trash-b"></i> 回收站</a>
+            </li>
+
+
+            <li class="menu-header">其他</li>
+
+            <li th:if="${session.loginUser.role == 0}" th:class="${currUri=='comment' ?'active':''}">
+                <a href="my-comments"><i class="ion ion-chatbox-working"></i><span>评论管理</span></a>
+            </li>
+
+            <li th:if="${session.loginUser.role == 1}" th:class="${currUri=='admin-link'?'active':''}"><a href="admin-link"><i
+                    class="icon ion ion-at"></i><span>链接管理</span></a></li>
+            <li th:if="${session.loginUser.role == 1}" th:class="${currUri=='admin-board'?'active':''}"><a href="admin-board"><i
+                    class="icon ion ion-chatbubble-working"></i><span>留言管理</span></a></li>
+            <li th:if="${session.loginUser.role == 1}" th:class="${currUri=='admin-feedback'?'active':''}"><a href="admin-feedback"><i
+                    class="ion ion-android-drafts"></i><span>反馈管理</span></a></li>
+        </ul>
+        <div class="p-3 mt-4 mb-4">
+            <a href="logout" class="btn btn-danger btn-shadow btn-round has-icon has-icon-nofloat btn-block">
+                <i class="ion ion-help-buoy"></i>
+                <div>退出登录</div>
+            </a>
+        </div>
+    </aside>
+</div>
+
+<footer class="main-footer" th:fragment="footer">
+    <div class="footer-left">
+        &copy; 版权所有 <a href="http://xuewei.world">薛伟同学</a>
+        <div class="bullet"></div>
+        备案号: <a href="http://www.beian.miit.gov.cn/">XXXXXXX</a>
+    </div>
+    <div class="footer-right"></div>
+</footer>
+</body>
+</html>

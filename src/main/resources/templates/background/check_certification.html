@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"
+          name="viewport">
+    <title>认证审核管理-爱慈善</title>
+
+    <link rel="stylesheet" href="background/modules/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="background/modules/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="background/modules/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css">
+
+    <link rel="stylesheet" href="background/modules/summernote/summernote-lite.css">
+    <link rel="stylesheet" href="background/modules/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="background/css/demo.css">
+    <link rel="stylesheet" href="background/css/style.css">
+    <link rel="stylesheet" href="background/css/common.css"/>
+    <link rel="stylesheet" href="common/datatable/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" href="background/css/xtiper.css"/>
+</head>
+
+<body>
+<div id="app">
+    <div class="main-wrapper">
+        <div class="navbar-bg"></div>
+
+        <div th:replace="commons/admin-bar::navbar(currUri ='certificate')"></div>
+        <div th:replace="commons/admin-bar::sidebar(currUri ='certificate')"></div>
+        <div class="main-content">
+            <section class="section">
+                <h1 class="section-header">
+                    <div><i class="icon ion ion ion-bookmark"></i> 认证管理</div>
+                </h1>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example1" class="table table-bordered table-hover display"
+                                           style="text-align: center">
+                                        <thead>
+                                        <tr>
+                                            <th style="display: none">序号</th>
+                                            <th>机构名称</th>
+                                            <th>机构类型</th>
+                                            <th>认证称号</th>
+                                            <th>姓名</th>
+                                            <th>身份证号码</th>
+                                            <th>用户昵称</th>
+                                            <th>审核状态</th>
+                                            <th>处理信息</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody style="font-size: 13px">
+                                        <tr th:each="c,certificationStat:${certifications}">
+                                            <td style="display: none" th:text="${certificationStat.index +1}"></td>
+                                            <td th:text="${c.certification.id}" style="display: none"></td>
+                                            <td>【 [[${c.certification.name}]] 】</td>
+                                            <td th:text="${c.certification.type}"></td>
+                                            <td>【 [[${c.certification.showName}]] 】</td>
+                                            <td th:text="${c.certification.leaderName}" style="color: blue"></td>
+                                            <td th:text="${c.certification.idCard}"></td>
+                                            <td th:text="${c.user.name}"></td>
+                                            <td th:text="${c.certification.proveImg}" style="display: none"></td>
+                                            <td th:text="${c.certification.idCardImg0}" style="display: none"></td>
+                                            <td th:text="${c.certification.idCardImg1}" style="display: none"></td>
+                                            <td th:if="${c.certification.isChecked} eq 0" class="text-warning">等待审核</td>
+                                            <td th:if="${c.certification.isChecked} eq 1" class="text-success">已通过</td>
+                                            <td th:if="${c.certification.isChecked} eq 2" class="text-danger">未通过</td>
+                                            <td th:text="${c.certification.info}"></td>
+                                            <td>
+                                                <button style="display: none" id="seeImgs" data-toggle="modal"data-target="#myModal"></button>
+                                                <button class="btn btn-primary btn-sm" title="查看证件" onclick="getImges(this)">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                                <button onclick="solve1(this)" class="btn btn-sm btn-danger" title="处理" th:if="${c.certification.isChecked eq 0}">
+                                                    <i class="ion ion-arrow-right-a"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <thead>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div><!-- end card-->
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div th:replace="commons/admin-bar::footer"></div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        证件信息
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <hr>
+                        <h5>单位证明/营业执照</h5>
+                        <br>
+                        <img id="proImg" alt="单位证明/营业执照">
+                    </div>
+                    <div>
+                        <hr>
+                        <h5>身份证正面照</h5>
+                        <br>
+                        <img id="card1" alt="身份证正面照">
+                    </div>
+                    <div>
+                        <hr>
+                        <h5>身份证反面照</h5>
+                        <br>
+                        <img id="card2" alt="身份证反面照">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="background/modules/jquery.min.js"></script>
+<script src="background/modules/popper.js"></script>
+<script src="background/modules/tooltip.js"></script>
+<script src="background/modules/bootstrap/js/bootstrap.min.js"></script>
+<script src="background/modules/nicescroll/jquery.nicescroll.min.js"></script>
+<script src="background/modules/scroll-up-bar/dist/scroll-up-bar.min.js"></script>
+<script src="background/js/sa-functions.js"></script>
+
+<script src="background/modules/chart.min.js"></script>
+<script src="background/modules/summernote/summernote-lite.js"></script>
+
+<script src="background/js/scripts.js"></script>
+<script src="background/js/custom.js"></script>
+<script src="common/datatable/jquery.dataTables.min.js"></script>
+<script src="common/datatable/dataTables.bootstrap4.min.js"></script>
+<script src="common/js/board.js"></script>
+<script src="background/js/xtiper.min.js"></script>
+
+<script>
+    // START CODE FOR BASIC DATA TABLE
+    $(document).ready(function () {
+        $('#example1').DataTable({
+            language: {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 项结果",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            },
+            "aoColumnDefs": [{"bSortable": false, "aTargets": [1, 2, 3, 5]}],
+            "order": [4, "desc"]
+        });
+    });
+    // END CODE FOR BASIC DATA TABLE
+
+
+    // START CODE FOR Child rows (show extra / detailed information) DATA TABLE
+    /**
+     * 删除留言
+     * @param id
+     */
+    function deleteFeedBack(id) {
+        $.ajax({
+            type: "GET",
+            url: "deleteFeedBack",
+            data: {id: id},
+            dataType: "json",
+            success: function (data) {
+                if (data.code == 200) {
+                    alert("删除成功！");
+                    window.location.reload();
+                } else {
+                    alert("服务器发生了一个错误");
+                }
+            }
+        });
+    }
+
+    function getImges(obj) {
+        var x = $(obj).parent().parent().find("td");
+        $("#proImg").attr("src", x.eq(8).text());
+        $("#card1").attr("src", x.eq(9).text());
+        $("#card2").attr("src", x.eq(10).text());
+        $("#seeImgs").click();
+    }
+
+    var id;
+
+    function solve1(obj) {
+        var x = $(obj).parent().parent().find("td");
+        id = x.eq(1).text();
+        xtip_win1();
+        // check_certification.html
+        // $("#slove")[0].click();
+    }
+
+    function xtip_win1() {
+        xtip.win({
+            type: 'confirm', //alert 或 confirm
+            btn: ['确认', '关闭'],
+            tip: '<div class="form-group">\n' +
+                 '    <label for="idCard">处理结果</label>\n' +
+                 '    <select class="form-control" id="result">\n' +
+                 '        <option value="1">通过</option>\n' +
+                 '        <option value="2">不通过</option>\n' +
+                 '    </select>\n' +
+                 '</div>\n' +
+                 '<div class="form-group">\n' +
+                 '    <label for="result_info">处理信息</label>\n' +
+                 '    <input id="result_info" type="text" value="-" class="form-control" >\n' +
+                 '</div>',
+            // icon: 'success',
+            title: "认证审核",
+            min: true,
+            width: '600px',
+            shade: false,
+            shadeClose: false,
+            lock: false,
+            btn1: function () {
+                var result = $("#result").val();
+                var result_info = $("#result_info").val();
+                $.ajax({
+                    type: "POST",
+                    url: "checkCertification",
+                    data: {isChecked: result, info: result_info, id: id},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data['code'] == 200) {
+                            alert("审核成功！");
+                            window.location.reload();
+                        } else {
+                            alert("服务器发生了一个错误");
+                        }
+                    }
+                });
+            },
+            zindex: 99999,
+        });
+    }
+</script>
+</body>
+</html>

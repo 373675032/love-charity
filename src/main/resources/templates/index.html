@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Meta Tags -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <meta name="description" content="Oellfare - Charity Template">
+        <meta name="author" content="">
+
+        <!-- Page Title -->
+        <title>爱慈善公益-首页</title>
+
+        <!-- Favicon and Touch Icons -->
+        <link href="front/images/logo.jpg" rel="shortcut icon" type="image/png">
+
+        <!-- Lead Style -->
+        <link href="front/css/style.css" rel="stylesheet" type="text/css">
+
+    </head>
+    <!--PreLoader-->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="siteloading-preloader"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+    <body>
+        <div th:replace="commons/front-bar::#header(currUri='index',links=${links})"></div>
+
+        <div class="main-wrapper">
+            <div class="slider_type2  wow fadeInDown">
+                <div class="slider mousemove" style="background-image:url(front/images/slider/slider_bg3.png)">
+                    <div class="container">
+                        <div class="slide-content text-left">
+                            <h2 class="sub_heading">他们需要的是爱和慈善</h2>
+                            <h1 class="heading">我们力求帮助所有困难的人<br/> <span class="typed"></span> world</h1>
+                            <div id="typed-strings">
+                                <p>xuewei</p>
+                            </div>
+                            <div class="power_button_group">
+                                <a href="register-page" class="power_button effect_1">
+                                    <span class="button_value">立即加入 >></span>
+                                </a>
+                                <a href="projects" class="power_button alt effect_1">
+                                    <span class="button_value">了解更多</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="power_iconbox type_2 wow fadeInLeft">
+                                <div class="power_iconbox_icon">
+                                    <img class="primary_img" src="front/images/bird.png" alt="alt">
+                                    <img class="secondary_img" src="front/images/bird_white.png" alt="alt">
+                                </div>
+                                <div class="power_iconbox_content">
+                                    <h5>发布求助</h5>
+                                    <p>如果你遇到了困难，可以在我们的平台发起求助！不幸总是暂时的！</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="power_iconbox type_2 wow fadeInDown">
+                                <div class="power_iconbox_icon">
+                                    <img class="primary_img" src="front/images/fund.png" alt="alt">
+                                    <img class="secondary_img" src="front/images/fund_white.png" alt="alt">
+                                </div>
+                                <div class="power_iconbox_content">
+                                    <h5>公益项目</h5>
+                                    <p>如果你有好点子，你可以在我们的平台发布项目！让更多的人参与进来！</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="power_iconbox type_2 wow fadeInUp">
+                                <div class="power_iconbox_icon">
+                                    <img class="primary_img" src="front/images/giving.png" alt="alt">
+                                    <img class="secondary_img" src="front/images/giving_white.png" alt="alt">
+                                </div>
+                                <div class="power_iconbox_content">
+                                    <h5>求助广场</h5>
+                                    <p>浏览求助广场，那里有很多求助信，你可以为更多的人提供力所能及的帮助！</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="power_iconbox type_2 wow fadeInRight">
+                                <div class="power_iconbox_icon">
+                                    <img class="primary_img" src="front/images/love.png" alt="alt">
+                                    <img class="secondary_img" src="front/images/love_white.png" alt="alt">
+                                </div>
+                                <div class="power_iconbox_content">
+                                    <h5>组织认证</h5>
+                                    <p>如果你有自己的小组织，申请我们平台的认证！我们给你更多的便利和支持！</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div th:replace="commons/front-bar::#footer"></div>
+
+         <!-- All JavaScript Files
+        ================================================== -->
+
+        <script src="common/js/jquery.min.js"></script>
+        <script src="front/js/bootstrap.min.js"></script>
+        <script src="front/js/menu.js"></script>
+        <script src="front/js/select2.js"></script>
+        <script src="front/js/jquery.fancybox.min.js"></script>
+        <script src="front/js/owl.carousel.min.js"></script>
+        <script src="front/js/spectragram.min.js"></script>
+        <script src="front/js/wow.js"></script>
+        <script src="front/js/typed.js"></script>
+        <script src="front/js/typed-custom.js"></script>
+        <script src="front/js/custom.js"></script>
+        
+    </body>
+</html>

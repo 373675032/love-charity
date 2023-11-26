@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.charity.mapper.FeedbackMapper">
+    <!--开启二级缓存,使用Ehcache缓存框架-->
+   <!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+    <!--feedback的映射结果集-->
+    <resultMap type="com.charity.entity.Feedback" id="FeedbackMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="img" column="img" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="gmtCreate" column="gmt_create" jdbcType="TIMESTAMP"/>
+        <result property="gmtModified" column="gmt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <!--全部字段-->
+    <sql id="allColumn"> id, user_id, user_name, img, content, gmt_create, gmt_modified </sql>
+    
+    <!--添加语句的字段列表-->
+    <sql id="insertColumn">
+        <if test="userId != null">
+                user_id,
+        </if>
+        <if test="userName != null and userName != ''">
+                user_name,
+        </if>
+        <if test="img != null and img != ''">
+                img,
+        </if>
+        <if test="content != null and content != ''">
+                content,
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create,
+        </if>
+    </sql>
+    
+    <!--添加语句的值列表-->
+        <sql id="insertValue">
+        <if test="userId != null">
+                #{userId},
+        </if>
+        <if test="userName != null and userName != ''">
+                #{userName},
+        </if>
+        <if test="img != null and img != ''">
+                #{img},
+        </if>
+        <if test="content != null and content != ''">
+                #{content},
+        </if>
+        <if test="gmtCreate != null">
+                #{gmtCreate},
+        </if>
+    </sql>
+    
+    <!--通用对Feedback各个属性的值的非空判断，Insert、Update使用-->
+    <sql id="commonsValue">
+        <if test="userId != null">
+                user_id = #{userId},
+        </if>
+        <if test="userName != null and userName != ''">
+                user_name = #{userName},
+        </if>
+        <if test="img != null and img != ''">
+                img = #{img},
+        </if>
+        <if test="content != null and content != ''">
+                content = #{content},
+        </if>
+        <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate},
+        </if>
+    </sql>
+    
+    <!--通用对Feedback各个属性的值的非空判断,Where查询使用-->
+    <sql id="commonsQuery">
+        <if test="userId != null">
+                and user_id = #{userId}
+        </if>
+        <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+        </if>
+        <if test="img != null and img != ''">
+                and img = #{img}
+        </if>
+        <if test="content != null and content != ''">
+                and content = #{content}
+        </if>
+        <if test="gmtCreate != null">
+                and gmt_create = #{gmtCreate}
+        </if>
+        <if test="gmtModified != null">
+                and gmt_modified = #{gmtModified}
+        </if>
+    </sql>
+    
+    <!--新增feedback:哪个字段不为空就添加哪列数据,返回自增主键-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertValue"/>
+        </trim>
+    </insert>
+   
+    <!--删除feedback:通过主键-->
+    <delete id="deleteById">
+        delete from feedback
+        <where>
+            id = #{id}
+        </where>
+    </delete>
+    
+    <!--查询单个feedback-->
+    <select id="getById" resultMap="FeedbackMap">
+        select
+        <include refid="allColumn"></include>
+        from feedback
+        <where>
+            id = #{id}
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="listFeedbacks" resultMap="FeedbackMap">
+        select
+          <include refid="allColumn"></include>
+        from feedback
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsQuery"></include>
+        </trim>
+        order by gmt_create desc
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update feedback
+        <set>
+            <include refid="commonsValue"></include>
+            gmt_modified = CURRENT_TIMESTAMP()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+</mapper>
