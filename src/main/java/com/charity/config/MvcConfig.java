@@ -1,6 +1,6 @@
 package com.charity.config;
 
-import com.charity.interceptor.LoginHandlerInterceptor;
+import com.charity.component.LoginHandlerInterceptor;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.ErrorPageRegistrar;
 import org.springframework.boot.web.server.ErrorPageRegistry;

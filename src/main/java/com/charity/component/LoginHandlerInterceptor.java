@@ -1,4 +1,4 @@
-package com.charity.interceptor;
+package com.charity.component;
 
 import com.charity.constant.RoleStatus;
 import com.charity.entity.User;
