@@ -65,7 +65,7 @@ public interface MessageMapper {
     List<Message> listMessages(Message message);
 
     /**
-     * 修改Message,根据 message 的主键修改数据
+     * 修改Message，根据 message 的主键修改数据
      *
      * @param message
      * @return 影响行数

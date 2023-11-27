@@ -28,5 +28,4 @@ public class TrashStatus {
      * 在回收站
      */
     public static final int IS_IN = 2;
-
 }

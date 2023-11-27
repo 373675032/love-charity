@@ -83,7 +83,7 @@ public interface ArticleActivityMapper {
     /**
      * @param articleActivity
      * @return 影响行数
-     * 修改ArticleActivity, 根据 articleActivity 的主键修改数据
+     * 修改ArticleActivity， 根据 articleActivity 的主键修改数据
      */
     int update(ArticleActivity articleActivity);
 

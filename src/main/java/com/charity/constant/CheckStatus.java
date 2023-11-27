@@ -33,6 +33,4 @@ public class CheckStatus {
      * 审核未通过
      */
     public static final int NOT_PASS = 2;
-
-
 }

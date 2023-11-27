@@ -74,7 +74,7 @@ public interface UserMapper {
     List<User> listUsers(User user);
 
     /**
-     * 修改User,根据 user 的主键修改数据
+     * 修改User，根据 user 的主键修改数据
      *
      * @param user
      * @return 影响行数

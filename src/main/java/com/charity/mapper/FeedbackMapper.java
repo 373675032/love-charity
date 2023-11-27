@@ -65,7 +65,7 @@ public interface FeedbackMapper {
     List<Feedback> listFeedbacks(Feedback feedback);
 
     /**
-     * 修改Feedback,根据 feedback 的主键修改数据
+     * 修改Feedback，根据 feedback 的主键修改数据
      *
      * @param feedback
      * @return 影响行数

@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * MVC配置
+ * MVC 配置
  * <p>
  * ==========================================================================
  * 郑重说明：本项目免费开源！原创作者为：薛伟同学，严禁私自出售。

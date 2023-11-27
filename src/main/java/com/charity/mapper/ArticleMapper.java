@@ -70,7 +70,7 @@ public interface ArticleMapper {
     /**
      * @param article
      * @return 影响行数
-     * 修改Article, 根据 article 的主键修改数据
+     * 修改Article， 根据 article 的主键修改数据
      */
     int update(Article article);
 
@@ -85,7 +85,7 @@ public interface ArticleMapper {
     Article getActivityByArticleId(Integer id);
 
     /**
-     * 根据文章标题,用户id获得文章
+     * 根据文章标题，用户id获得文章
      */
     Article listArticleByTitle(@Param("title") String title, @Param("id") Integer id);
 

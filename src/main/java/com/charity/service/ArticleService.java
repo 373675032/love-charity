@@ -122,7 +122,7 @@ public interface ArticleService {
     Integer countActivities();
 
     /**
-     * 根据文章标题,用户id查找文章
+     * 根据文章标题，用户id查找文章
      */
     Article listArticleByTitle(String title, Integer id);
 

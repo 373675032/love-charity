@@ -65,7 +65,7 @@ public interface MessageBoardMapper {
     List<MessageBoard> listMessageBoards(MessageBoard messageBoard);
 
     /**
-     * 修改MessageBoard,根据 messageBoard 的主键修改数据
+     * 修改MessageBoard，根据 messageBoard 的主键修改数据
      *
      * @param messageBoard
      * @return 影响行数

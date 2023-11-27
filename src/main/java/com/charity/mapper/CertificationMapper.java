@@ -73,7 +73,7 @@ public interface CertificationMapper {
     List<Certification> listCertifications(Certification certification);
 
     /**
-     * 修改Certification,根据 certification 的主键修改数据
+     * 修改Certification，根据 certification 的主键修改数据
      *
      * @param certification
      * @return 影响行数

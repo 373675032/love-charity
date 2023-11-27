@@ -10,13 +10,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 数据源配置
+ * Druid 配置
  * <p>
  * ==========================================================================
  * 郑重说明：本项目免费开源！原创作者为：薛伟同学，严禁私自出售。
@@ -38,31 +37,31 @@ public class DruidConfig {
     /**
      * 绑定配置文件中的相关属性
      */
-    @ConfigurationProperties(prefix = "spring.datasource")
     @Bean
+    @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource druid() {
         return new DruidDataSource();
     }
 
     /**
-     * 配置Druid的监控,配置一个管理后台的Servlet
+     * 配置 Druid 的监控，配置一个管理后台的 Servlet
      */
     @Bean
     public ServletRegistrationBean statViewServlet() {
         ServletRegistrationBean bean = new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
         Map<String, String> initParams = new HashMap<>();
-        // 登录druid的用户名
+        // 登录 druid 的用户名
         initParams.put("loginUsername", "admin");
-        // 登录druid的密码
+        // 登录 druid 的密码
         initParams.put("loginPassword", "admin");
-        //默认就是允许所有访问
+        // 默认就是允许所有访问
         initParams.put("allow", "");
         bean.setInitParameters(initParams);
         return bean;
     }
 
     /**
-     * 配置一个web监控的filter
+     * 配置一个 Web 监控的 Filter
      */
     @Bean
     public FilterRegistrationBean webStatFilter() {

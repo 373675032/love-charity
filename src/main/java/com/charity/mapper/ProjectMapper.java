@@ -65,7 +65,7 @@ public interface ProjectMapper {
     List<Project> listProjects(Project project);
 
     /**
-     * 修改Project,根据 project 的主键修改数据
+     * 修改Project，根据 project 的主键修改数据
      *
      * @param project
      * @return 影响行数

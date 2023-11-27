@@ -33,5 +33,4 @@ public class CommentType {
      * 公益项目
      */
     public static final int PROJECT = 1;
-
 }

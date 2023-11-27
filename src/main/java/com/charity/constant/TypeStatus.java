@@ -28,5 +28,4 @@ public class TypeStatus {
      * 活动
      */
     public static final int ACTIVITY = 2;
-
 }

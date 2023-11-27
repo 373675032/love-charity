@@ -28,5 +28,4 @@ public class RoleStatus {
      * 活动
      */
     public static final int ADMIN = 1;
-
 }

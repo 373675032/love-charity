@@ -44,7 +44,7 @@ public class MailUtils {
                     "<h3>邮箱验证<h3/>" +
                     "您收到了来自爱慈善公益平台发送的验证码<br>" +
                     "验证码: <span style='color : red'>" + code + "</span><br>" +
-                    "<h5 style='color : red'>如果并非本人操作,请忽略本邮件</h5>", true);
+                    "<h5 style='color : red'>如果并非本人操作，请忽略本邮件</h5>", true);
             helper.setFrom("373675032@qq.com");
             helper.setTo(email);
         } catch (MessagingException e) {

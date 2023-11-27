@@ -68,7 +68,7 @@ public interface CommentMapper {
     /**
      * @param comment
      * @return 影响行数
-     * 修改Comment, 根据 comment 的主键修改数据
+     * 修改Comment， 根据 comment 的主键修改数据
      */
     int update(Comment comment);
 

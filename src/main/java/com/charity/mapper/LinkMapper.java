@@ -65,7 +65,7 @@ public interface LinkMapper {
     List<Link> listLinks(Link link);
 
     /**
-     * 修改Link,根据 link 的主键修改数据
+     * 修改Link，根据 link 的主键修改数据
      *
      * @param link
      * @return 影响行数

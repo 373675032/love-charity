@@ -84,7 +84,7 @@ public class BaseController {
     protected ResponseResult result;
 
     /**
-     * 在每个子类方法调用之前先调用，设置request,response,session这三个对象
+     * 在每个子类方法调用之前先调用，设置 Request、Response、Session 这三个对象
      */
     @ModelAttribute
     public void setReqAndRes(HttpServletRequest request, HttpServletResponse response) {
