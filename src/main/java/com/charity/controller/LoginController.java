@@ -2,10 +2,11 @@ package com.charity.controller;
 
 import com.charity.dto.ResponseResult;
 import com.charity.entity.User;
-import com.charity.utils.OssUtils;
 import com.charity.utils.LogUtils;
 import com.charity.utils.MailUtils;
+import com.charity.utils.OssUtils;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +38,9 @@ import java.util.Map;
 public class LoginController extends BaseController {
 
     private final Logger logger = LogUtils.getInstance(LoginController.class);
+
+    @Value("${spring.mail.username}")
+    private String fromEmail;
 
     /**
      * 用户注册
@@ -120,7 +124,7 @@ public class LoginController extends BaseController {
             return result;
         }
         logger.info("开始发送邮件.../n" + "获取的到邮件发送对象为:" + mailSender);
-        mailUtils = new MailUtils(mailSender);
+        mailUtils = new MailUtils(mailSender, fromEmail);
         String code = mailUtils.sendCode(email);
         session.setAttribute(email + "_code", code);
         logger.info("发送邮箱验证码给用户" + userName + "成功");
@@ -135,7 +139,7 @@ public class LoginController extends BaseController {
     @RequestMapping("/sendCode")
     public ResponseResult sendCode(String email) {
         logger.info("开始发送邮件.../n" + "获取的到邮件发送对象为:" + email);
-        mailUtils = new MailUtils(mailSender);
+        mailUtils = new MailUtils(mailSender, fromEmail);
         String code = mailUtils.sendCode(email);
         session.setAttribute("_code", code);
         if (code != null && code != "") {

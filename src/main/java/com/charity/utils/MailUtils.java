@@ -29,9 +29,11 @@ public class MailUtils {
     Logger logger = LogUtils.getInstance(MailUtils.class);
     //邮件发送器
     private final JavaMailSenderImpl mailSender;
+    private final String fromEmail;
 
-    public MailUtils(JavaMailSenderImpl mailSender) {
+    public MailUtils(JavaMailSenderImpl mailSender, String fromEmail) {
         this.mailSender = mailSender;
+        this.fromEmail = fromEmail;
     }
 
     public String sendCode(String email) {
@@ -45,7 +47,7 @@ public class MailUtils {
                     "您收到了来自爱慈善公益平台发送的验证码<br>" +
                     "验证码: <span style='color : red'>" + code + "</span><br>" +
                     "<h5 style='color : red'>如果并非本人操作，请忽略本邮件</h5>", true);
-            helper.setFrom("373675032@qq.com");
+            helper.setFrom(fromEmail);
             helper.setTo(email);
         } catch (MessagingException e) {
             e.printStackTrace();
